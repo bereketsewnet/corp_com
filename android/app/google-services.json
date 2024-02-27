@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "261238166615",
+    "firebase_url": "https://corpcom-77651-default-rtdb.firebaseio.com",
+    "project_id": "corpcom-77651",
+    "storage_bucket": "corpcom-77651.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261238166615:android:51f02ce1272f12d5643f12",
+        "android_client_info": {
+          "package_name": "com.example.corp_com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "261238166615-k7tt87fbaj126ionb9k66pouatqiaoti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjL28Ynnl0wmEddUqV9X9ov3a6M5-cFAw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "261238166615-k7tt87fbaj126ionb9k66pouatqiaoti.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "261238166615-jufujlvvc3m8njcmk8dlgr4r6518bm4k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cropCom"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
