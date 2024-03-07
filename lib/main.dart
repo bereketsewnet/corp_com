@@ -1,6 +1,6 @@
-import 'package:corp_com/screens/mobile_layout_screen.dart';
-import 'package:corp_com/screens/web_layout_screen.dart';
-import 'package:corp_com/utils/responsive_layout.dart';
+import 'package:corp_com/features/auth/screens/login_screen.dart';
+import 'package:corp_com/features/landing/screens.dart';
+import 'package:corp_com/routher.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -26,10 +26,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: backgroundColor,
       ),
-      home: const ResponsiveLayout(
-        mobileScreenLayout: MobileLayoutScreen(),
-        webScreenLayout: WebLayoutScreen(),
-      ),
+      onGenerateRoute: (settigs) => generateRoute(settigs) ,
+      home: const LandingScreen(),
     );
   }
 }
+/*
+home: const ResponsiveLayout(
+        mobileScreenLayout: MobileLayoutScreen(),
+        webScreenLayout: WebLayoutScreen(),
+      ),
+ */
