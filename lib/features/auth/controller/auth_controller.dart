@@ -48,14 +48,13 @@ class AuthController {
     );
   }
 
+  Stream<UserModel> userDataById(String userId) {
+    return authRepository.userData(userId);
+  }
+
 //   Future<UserModel?> getUserData() async {
 //     UserModel? user = await authRepository.getCurrentUserData();
 //     return user;
-//   }
-
-//
-//   Stream<UserModel> userDataById(String userId) {
-//     return authRepository.userData(userId);
 //   }
 //
 //   void setUserState(bool isOnline) {

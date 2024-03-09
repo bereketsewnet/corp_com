@@ -14,12 +14,11 @@ import '../screens/otp_screen.dart';
 import '../screens/user_information_screen.dart';
 
 final authRepositoryProvider = Provider(
-      (ref) => AuthRepository(
+  (ref) => AuthRepository(
     auth: FirebaseAuth.instance,
     firestore: FirebaseFirestore.instance,
   ),
 );
-
 
 class AuthRepository {
   final FirebaseAuth auth;
@@ -68,7 +67,7 @@ class AuthRepository {
       Navigator.pushNamedAndRemoveUntil(
         context,
         UserInformationScreen.routeName,
-            (route) => false,
+        (route) => false,
       );
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: e.message!);
@@ -89,10 +88,10 @@ class AuthRepository {
       if (profilePic != null) {
         photoUrl = await ref
             .read(commonFirebaseStorageRepositoryProvider)
-            .storeFileToFirebase(
-          'profilePic/$uid',
-          profilePic,
-        );
+            .storeFileToFirebaseImage(
+              'profilePic/$uid',
+              profilePic,
+            );
       }
 
       var user = UserModel(
@@ -111,7 +110,7 @@ class AuthRepository {
         MaterialPageRoute(
           builder: (context) => const MobileLayoutScreen(),
         ),
-            (route) => false,
+        (route) => false,
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
@@ -121,9 +120,9 @@ class AuthRepository {
   Stream<UserModel> userData(String userId) {
     return firestore.collection('users').doc(userId).snapshots().map(
           (event) => UserModel.fromMap(
-        event.data()!,
-      ),
-    );
+            event.data()!,
+          ),
+        );
   }
 
   void setUserState(bool isOnline) async {
@@ -132,14 +131,22 @@ class AuthRepository {
     });
   }
 
-  Future<UserModel?> getCurrentUserData() async{
-    var userData = await firestore.collection('users').doc(auth.currentUser?.uid).get();
+  Future<UserModel?> getCurrentUserData() async {
+    var userData =
+        await firestore.collection('users').doc(auth.currentUser?.uid).get();
     UserModel? user;
-    if(userData.data() != null){
+    if (userData.data() != null) {
       user = UserModel.fromMap(userData.data()!);
     }
 
     return user;
   }
 
+  Stream<UserModel> UserData(String userId) {
+    return firestore.collection('users').doc(userId).snapshots().map(
+          (event) => UserModel.fromMap(
+            event.data()!,
+          ),
+        );
+  }
 }
