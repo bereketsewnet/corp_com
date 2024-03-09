@@ -2,7 +2,7 @@ import 'package:corp_com/features/select_contacts/screens/select_contacts_screen
 import 'package:flutter/material.dart';
 
 import '../colors.dart';
-import '../widgets/contacts_list.dart';
+import '../features/chat/widgets/contacts_list.dart';
 
 class MobileLayoutScreen extends StatelessWidget {
   const MobileLayoutScreen({Key? key}) : super(key: key);

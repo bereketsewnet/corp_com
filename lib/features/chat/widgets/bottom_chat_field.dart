@@ -135,7 +135,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             _messageController.text.trim(),
             widget.receiverUserId,
           );
-      _messageController.text = '';
+      setState(() {
+        _messageController.text = '';
+      });
     }
   }
 }
