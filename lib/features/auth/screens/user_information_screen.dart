@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
@@ -7,9 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserInformationScreen extends ConsumerStatefulWidget {
   static const routeName = '/user-information';
-
   const UserInformationScreen({super.key});
-
   @override
   ConsumerState<UserInformationScreen> createState() => _UserInformationScreenState();
 }

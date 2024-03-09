@@ -8,10 +8,20 @@ Future<void> checkPermissionsAll() async {
   if (await Permission.storage.isDenied) {
     await Permission.storage.request();
   }
+
+  if (await Permission.storage.isDenied) {
+    await Permission.contacts.request();
+  }
 }
 
 Future<void> checkPermissionsImage() async {
   if (await Permission.storage.isDenied) {
     await Permission.storage.request();
+  }
+}
+
+Future<void> checkPermissionsContacts() async {
+  if (await Permission.contacts.isDenied) {
+    await Permission.contacts.request();
   }
 }
