@@ -1,14 +1,13 @@
 import 'package:corp_com/common/widgets/loader.dart';
 import 'package:corp_com/features/chat/controller/chat_controller.dart';
-import 'package:corp_com/widgets/sender_message_card.dart';
+import 'package:corp_com/features/chat/widgets/sender_message_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../features/chat/widgets/my_message_card.dart';
 import '../models/message.dart';
-import 'my_message_card.dart';
-
 class ChatList extends ConsumerStatefulWidget {
   final String receiverUserId;
   const ChatList(this.receiverUserId, {Key? key}) : super(key: key);
@@ -39,6 +38,7 @@ class _ChatListState extends ConsumerState<ChatList> {
         });
         return ListView.builder(
           controller: messageScrollController,
+          physics: const BouncingScrollPhysics(),
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
             final messageData = snapshot.data![index];
@@ -47,11 +47,13 @@ class _ChatListState extends ConsumerState<ChatList> {
               return MyMessageCard(
                 message: messageData.text,
                 date: timeSent,
+                type: messageData.type,
               );
             }
             return SenderMessageCard(
               message: messageData.text,
               date: timeSent,
+              type: messageData.type,
             );
           },
         );

@@ -52,12 +52,12 @@ class AuthController {
     return authRepository.userData(userId);
   }
 
+  void setUserState(bool isOnline) {
+    authRepository.setUserState(isOnline);
+  }
+
 //   Future<UserModel?> getUserData() async {
 //     UserModel? user = await authRepository.getCurrentUserData();
 //     return user;
-//   }
-//
-//   void setUserState(bool isOnline) {
-//     authRepository.setUserState(isOnline);
 //   }
 }
