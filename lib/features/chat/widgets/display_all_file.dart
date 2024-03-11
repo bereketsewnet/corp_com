@@ -1,4 +1,5 @@
 import 'package:corp_com/common/enums/message_enum.dart';
+import 'package:corp_com/features/chat/widgets/video_player_item.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -21,8 +22,12 @@ class DisplayAllFile extends StatelessWidget {
               fontSize: 16,
             ),
           )
-        : CachedNetworkImage(
-            imageUrl: message,
-          );
+        : type == MessageEnum.video
+            ? VideoPlayerItem(
+                videoUrl: message,
+              )
+            : CachedNetworkImage(
+                imageUrl: message,
+              );
   }
 }
