@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:corp_com/common/enums/message_enum.dart';
+import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/chat/controller/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,7 +80,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: selectImage,
                         icon: const Icon(
                           Icons.camera_alt,
                           color: Colors.grey,
@@ -117,8 +121,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             child: GestureDetector(
               onTap: sendTextMessage,
               child: Icon(
-                isNotShowSendButton ?
-                Icons.keyboard_voice_rounded : Icons.send_rounded,
+                isNotShowSendButton
+                    ? Icons.keyboard_voice_rounded
+                    : Icons.send_rounded,
                 color: whiteColor,
               ),
             ),
@@ -138,6 +143,25 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       setState(() {
         _messageController.text = '';
       });
+    }
+  }
+
+  void sendFileMessage(
+    File file,
+    MessageEnum messageEnum,
+  ) {
+    ref.read(chatControllerProvider).sendFileMessage(
+          context,
+          file,
+          widget.receiverUserId,
+          messageEnum,
+        );
+  }
+
+  void selectImage() async {
+    File? image = await pickImageFromGallery(context);
+    if(image != null){
+      sendFileMessage(image, MessageEnum.image);
     }
   }
 }

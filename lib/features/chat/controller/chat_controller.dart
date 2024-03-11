@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:corp_com/common/enums/message_enum.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/chat/repositories/chat_repository.dart';
 import 'package:corp_com/models/message.dart';
@@ -23,10 +26,11 @@ class ChatController {
     required this.ref,
   });
 
-  Stream<List<ChatContact>> chatContacts(){
+  Stream<List<ChatContact>> chatContacts() {
     return chatRepository.getChatContacts();
   }
-  Stream<List<Message>> chatStream(String receiverUserId){
+
+  Stream<List<Message>> chatStream(String receiverUserId) {
     return chatRepository.getChatStream(receiverUserId);
   }
 
@@ -38,6 +42,24 @@ class ChatController {
             text: text,
             receiverUserId: receiverUserId,
             senderUser: value!,
+          ),
+        );
+  }
+
+  void sendFileMessage(
+    BuildContext context,
+    File file,
+    String receiverUserId,
+    MessageEnum messageEnum,
+  ) {
+    ref.read(userDataAuthProvider).whenData(
+          (value) => chatRepository.sendFileMessage(
+            context: context,
+            file: file,
+            receiverUserId: receiverUserId,
+            senderUserData: value!,
+            messageEnum: messageEnum,
+            ref: ref,
           ),
         );
   }
