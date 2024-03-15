@@ -285,4 +285,32 @@ class ChatRepository {
       showSnackBar(context: context, content: e.toString());
     }
   }
+
+  void setChatMessageSeen(
+      BuildContext context,
+      String receiverId,
+      String messageId,
+      ) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(receiverId)
+          .collection('message')
+          .doc(messageId)
+          .update({'isSeen': true});
+
+      await firestore
+          .collection('users')
+          .doc(receiverId)
+          .collection('chats')
+          .doc(auth.currentUser!.uid)
+          .collection('message')
+          .doc(messageId)
+          .update({'isSeen': true});
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
 }

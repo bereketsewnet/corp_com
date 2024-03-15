@@ -1,9 +1,10 @@
-import 'package:corp_com/common/enums/message_enum.dart';
+import 'package:corp_com/features/chat/widgets/display_all_file.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 import '../../../colors.dart';
-import 'display_all_file.dart';
+import '../../../common/enums/message_enum.dart';
+
 
 class SenderMessageCard extends StatelessWidget {
   const SenderMessageCard({
@@ -29,8 +30,7 @@ class SenderMessageCard extends StatelessWidget {
     final isReplying = repliedText.isNotEmpty;
 
     return SwipeTo(
-      onRightSwipe: (details) {
-        // print('Callback from Swipe To Left');
+      onRightSwipe: (details){
         onRightSwipe();
       },
       child: Align(
@@ -41,74 +41,68 @@ class SenderMessageCard extends StatelessWidget {
           ),
           child: Card(
             elevation: 1,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             color: senderMessageColor,
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
+                  padding: type == MessageEnum.text
+                      ? const EdgeInsets.only(
                     left: 10,
                     right: 30,
                     top: 5,
                     bottom: 20,
+                  )
+                      : const EdgeInsets.only(
+                    left: 5,
+                    top: 5,
+                    right: 5,
+                    bottom: 25,
                   ),
-                  child: Text(
-                    message,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
+                  child: Column(
+                    children: [
+                      if (isReplying) ...[
+                        Text(
+                          username,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: backgroundColor.withOpacity(0.5),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(
+                                5,
+                              ),
+                            ),
+                          ),
+                          child: DisplayAllFile(
+                            message: repliedText,
+                            type: repliedMessageType,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                      DisplayAllFile(
+                        message: message,
+                        type: type,
+                      ),
+                    ],
                   ),
                 ),
                 Positioned(
                   bottom: 2,
                   right: 10,
-                  child: Padding(
-                    padding: type == MessageEnum.text
-                        ? const EdgeInsets.only(
-                            left: 20,
-                            right: 45,
-                            top: 5,
-                            bottom: 20,
-                          )
-                        : const EdgeInsets.only(
-                            left: 5,
-                            right: 5,
-                            top: 5,
-                            bottom: 25,
-                          ),
-                    child: Column(
-                      children: [
-                        if (isReplying) ...[
-                          Text(
-                            username,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: backgroundColor.withOpacity(0.5),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(
-                                  5,
-                                ),
-                              ),
-                            ),
-                            child: DisplayAllFile(
-                              message: repliedText,
-                              type: repliedMessageType,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                        ],
-                        DisplayAllFile(
-                          message: message,
-                          type: type,
-                        ),
-                      ],
+                  child: Text(
+                    date,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
                     ),
                   ),
                 ),

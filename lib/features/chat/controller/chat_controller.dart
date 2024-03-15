@@ -59,15 +59,26 @@ class ChatController {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData(
           (value) => chatRepository.sendFileMessage(
-            context: context,
-            file: file,
-            receiverUserId: receiverUserId,
-            senderUserData: value!,
-            messageEnum: messageEnum,
-            ref: ref,
-            messageReply: messageReply
-          ),
+              context: context,
+              file: file,
+              receiverUserId: receiverUserId,
+              senderUserData: value!,
+              messageEnum: messageEnum,
+              ref: ref,
+              messageReply: messageReply),
         );
     ref.read(messageReplyProvider.state).update((state) => null);
+  }
+
+  void setChatMessageSeen(
+    BuildContext context,
+    String receiverUserId,
+    String messageId,
+  ) {
+    chatRepository.setChatMessageSeen(
+      context,
+      receiverUserId,
+      messageId,
+    );
   }
 }
