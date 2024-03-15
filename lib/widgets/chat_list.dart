@@ -1,3 +1,4 @@
+import 'package:corp_com/common/providers/message_reply_provider.dart';
 import 'package:corp_com/common/widgets/loader.dart';
 import 'package:corp_com/features/chat/controller/chat_controller.dart';
 import 'package:corp_com/features/chat/widgets/sender_message_card.dart';
@@ -8,8 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../features/chat/widgets/my_message_card.dart';
 import '../models/message.dart';
+
 class ChatList extends ConsumerStatefulWidget {
   final String receiverUserId;
+
   const ChatList(this.receiverUserId, {Key? key}) : super(key: key);
 
   @override
@@ -24,40 +27,66 @@ class _ChatListState extends ConsumerState<ChatList> {
     super.dispose();
     messageScrollController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
-      stream: ref.read(chatControllerProvider).chatStream(widget.receiverUserId),
-      builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return const Loader();
-        }
+        stream:
+            ref.read(chatControllerProvider).chatStream(widget.receiverUserId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Loader();
+          }
 
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          messageScrollController.jumpTo(messageScrollController.position.maxScrollExtent);
-        });
-        return ListView.builder(
-          controller: messageScrollController,
-          physics: const BouncingScrollPhysics(),
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index) {
-            final messageData = snapshot.data![index];
-            var timeSent = DateFormat.Hm().format(messageData.timeSent);
-            if (messageData.senderId == FirebaseAuth.instance.currentUser!.uid) {
-              return MyMessageCard(
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            messageScrollController
+                .jumpTo(messageScrollController.position.maxScrollExtent);
+          });
+          return ListView.builder(
+            controller: messageScrollController,
+            physics: const BouncingScrollPhysics(),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              final messageData = snapshot.data![index];
+              var timeSent = DateFormat.Hm().format(messageData.timeSent);
+              if (messageData.senderId ==
+                  FirebaseAuth.instance.currentUser!.uid) {
+                return MyMessageCard(
+                  message: messageData.text,
+                  date: timeSent,
+                  type: messageData.type,
+                  repliedMessageType: messageData.repliedMessageType,
+                  repliedText: messageData.repliedMessage,
+                  username: messageData.repliedTo,
+                  isSeen: false,
+                  onLeftSwipe: () => onMessageSwipe(
+                    messageData.text,
+                    true,
+                    messageData.type,
+                  ),
+                );
+              }
+              return SenderMessageCard(
                 message: messageData.text,
                 date: timeSent,
                 type: messageData.type,
+                onRightSwipe: () => onMessageSwipe(
+                  messageData.text,
+                  false,
+                  messageData.type,
+                ),
+                repliedText: messageData.repliedMessage,
+                username: messageData.repliedTo,
+                repliedMessageType: messageData.repliedMessageType,
               );
-            }
-            return SenderMessageCard(
-              message: messageData.text,
-              date: timeSent,
-              type: messageData.type,
-            );
-          },
+            },
+          );
+        });
+  }
+
+  void onMessageSwipe(String message, bool isMe, messageEnum) {
+    ref.read(messageReplyProvider.state).update(
+          (state) => MessageReply(message, isMe, messageEnum),
         );
-      }
-    );
   }
 }

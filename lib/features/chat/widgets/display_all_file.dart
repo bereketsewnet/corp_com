@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:corp_com/common/enums/message_enum.dart';
 import 'package:corp_com/features/chat/widgets/video_player_item.dart';
-import 'package:corp_com/models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

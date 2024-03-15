@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:corp_com/common/enums/message_enum.dart';
+import 'package:corp_com/common/providers/message_reply_provider.dart';
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/chat/controller/chat_controller.dart';
+import 'package:corp_com/features/chat/widgets/message_reply_preview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,8 +49,11 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
 
   @override
   Widget build(BuildContext context) {
+    final messageReply = ref.watch(messageReplyProvider);
+    final isShowMessageReply = messageReply != null;
     return Column(
       children: [
+        isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
         Row(
           children: [
             Expanded(
@@ -69,28 +74,11 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: mobileChatBoxColor,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: SizedBox(
-                      width: 100,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: toggleEmojiKeyboardContainer,
-                            icon: const Icon(
-                              Icons.emoji_emotions,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.gif,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
+                  prefixIcon: IconButton(
+                    onPressed: toggleEmojiKeyboardContainer,
+                    icon: const Icon(
+                      Icons.emoji_emotions,
+                      color: Colors.grey,
                     ),
                   ),
                   suffixIcon: Visibility(
@@ -164,6 +152,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                   onEmojiSelected: (category, emoji) {
                     _messageController.text =
                         _messageController.text + emoji.emoji;
+                    setState(() {
+                      isNotShowSendButton = false;
+                    });
                   },
                 ),
               )

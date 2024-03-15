@@ -54,6 +54,7 @@ dependencies:
   flutter_sound: ^9.2.13
   path_provider: ^2.1.2
   audioplayers: ^5.2.1
+  swipe_to: ^1.0.6
 
 
 dev_dependencies:

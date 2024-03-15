@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:corp_com/common/providers/message_reply_provider.dart';
 import 'package:corp_com/common/repositories/common_firebase_storage_repository.dart';
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/models/user_model.dart';
@@ -139,6 +141,9 @@ class ChatRepository {
     required receiverUsername,
     required MessageEnum messageType,
     required bool isGroupChat,
+    required MessageReply? messageReply,
+    required String senderUsername,
+    required String receiverUserName,
   }) async {
     final message = Message(
       senderId: auth.currentUser!.uid,
@@ -148,6 +153,13 @@ class ChatRepository {
       timeSent: timeSent,
       messageId: messageId,
       isSeen: false,
+      repliedMessage: messageReply == null ? '' : messageReply.message,
+      repliedTo: messageReply == null
+          ? ''
+          : messageReply.isMe
+              ? senderUsername
+              : receiverUserName,
+      repliedMessageType: messageReply == null ? MessageEnum.text : messageReply.messageEnum,
     );
 
     await firestore
@@ -174,6 +186,7 @@ class ChatRepository {
     required String text,
     required String receiverUserId,
     required UserModel senderUser,
+    required MessageReply? messageReply,
   }) async {
     try {
       var timeSent = DateTime.now();
@@ -195,6 +208,9 @@ class ChatRepository {
         messageType: MessageEnum.text,
         isGroupChat: false,
         receiverUsername: receiverUserData.name,
+        messageReply: messageReply,
+        receiverUserName: receiverUserData.name,
+        senderUsername: senderUser.name,
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
@@ -208,6 +224,7 @@ class ChatRepository {
     required ProviderRef ref,
     required MessageEnum messageEnum,
     required UserModel senderUserData,
+    required MessageReply? messageReply,
   }) async {
     try {
       var timeSent = DateTime.now();
@@ -260,10 +277,12 @@ class ChatRepository {
         receiverUsername: receiverUserData.name,
         messageType: messageEnum,
         isGroupChat: false,
+        messageReply: messageReply,
+        senderUsername: senderUserData.name,
+        receiverUserName: receiverUserData.name
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
-
     }
   }
 }
