@@ -53,5 +53,7 @@
     <string>We need access to your microphone.</string>
     <key>NSContactsUsageDescription</key>
     <string>We need access to your contact to chat</string>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>We needs here recordings</string>
 </dict>
 </plist>

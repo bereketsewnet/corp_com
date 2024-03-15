@@ -48,7 +48,7 @@ Future<File?> pickVideoFromGallery(BuildContext context) async {
 //   try {
 //     gif = await Giphy.getGif(
 //       context: context,
-//       apiKey: 'pwXu0t7iuNVm8VO5bgND2NzwCpVH9S0F',
+//       apiKey: 'opW8aChglMOFQQ9SOApqhmn4KDQBJb0P',
 //     );
 //   } catch (e) {
 //     showSnackBar(context: context, content: e.toString());
