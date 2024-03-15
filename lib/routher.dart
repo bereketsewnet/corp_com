@@ -7,6 +7,7 @@ import 'package:corp_com/features/chat/screens/mobile_chat_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'features/auth/screens/user_information_screen.dart';
+import 'features/group/screens/create_group_screen.dart';
 import 'features/select_contacts/screens/select_contacts_screen.dart';
 import 'features/status/screens/confirm_status_screen.dart';
 import 'features/status/screens/status_screen.dart';
@@ -60,11 +61,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
       );
 
-    // case CreateGroupScreen.routeName:
-    //   return MaterialPageRoute(
-    //     builder: (context) => const CreateGroupScreen(),
-    //   );
-    //
+    case CreateGroupScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const CreateGroupScreen(),
+      );
+
     default:
       return MaterialPageRoute(
         builder: (context) => const ErrorScreen(
