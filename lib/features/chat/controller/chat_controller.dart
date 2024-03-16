@@ -4,6 +4,7 @@ import 'package:corp_com/common/enums/message_enum.dart';
 import 'package:corp_com/common/providers/message_reply_provider.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/chat/repositories/chat_repository.dart';
+import 'package:corp_com/models/group.dart';
 import 'package:corp_com/models/message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,12 +32,24 @@ class ChatController {
     return chatRepository.getChatContacts();
   }
 
+  Stream<List<Group>> chatGroups() {
+    return chatRepository.getChatGroups();
+  }
+
   Stream<List<Message>> chatStream(String receiverUserId) {
     return chatRepository.getChatStream(receiverUserId);
   }
 
+  Stream<List<Message>> groupChatStream(String groupId) {
+    return chatRepository.getGroupChatStream(groupId);
+  }
+
   void sendTextMessage(
-      BuildContext context, String text, String receiverUserId) {
+    BuildContext context,
+    String text,
+    String receiverUserId,
+    bool isGroupChat,
+  ) {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData(
           (value) => chatRepository.sendTextMessage(
@@ -45,6 +58,7 @@ class ChatController {
             receiverUserId: receiverUserId,
             senderUser: value!,
             messageReply: messageReply,
+            isGroupChat: isGroupChat,
           ),
         );
     ref.read(messageReplyProvider.state).update((state) => null);
@@ -55,17 +69,20 @@ class ChatController {
     File file,
     String receiverUserId,
     MessageEnum messageEnum,
+    bool isGroupChat,
   ) {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData(
           (value) => chatRepository.sendFileMessage(
-              context: context,
-              file: file,
-              receiverUserId: receiverUserId,
-              senderUserData: value!,
-              messageEnum: messageEnum,
-              ref: ref,
-              messageReply: messageReply),
+            context: context,
+            file: file,
+            receiverUserId: receiverUserId,
+            senderUserData: value!,
+            messageEnum: messageEnum,
+            ref: ref,
+            messageReply: messageReply,
+            isGroupChat: isGroupChat,
+          ),
         );
     ref.read(messageReplyProvider.state).update((state) => null);
   }

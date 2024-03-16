@@ -16,8 +16,10 @@ import '../../../colors.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String receiverUserId;
+  final bool isGroupChat;
 
-  const BottomChatField({super.key, required this.receiverUserId});
+  const BottomChatField(
+      {super.key, required this.receiverUserId, required this.isGroupChat});
 
   @override
   ConsumerState<BottomChatField> createState() => _BottomChatFieldState();
@@ -169,6 +171,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             context,
             _messageController.text.trim(),
             widget.receiverUserId,
+            widget.isGroupChat,
           );
       setState(() {
         _messageController.text = '';
@@ -179,8 +182,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       if (!isRecorderInit) {
         return;
       }
-      
-      
+
       if (isRecording) {
         await _soundRecorder!.stopRecorder();
         sendFileMessage(File(path), MessageEnum.audio);
@@ -205,6 +207,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           file,
           widget.receiverUserId,
           messageEnum,
+          widget.isGroupChat,
         );
   }
 
