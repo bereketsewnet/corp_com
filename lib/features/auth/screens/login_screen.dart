@@ -1,4 +1,4 @@
-import 'package:corp_com/colors.dart';
+import 'package:corp_com/common/utils/colors.dart';
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/common/widgets/custom_button.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';

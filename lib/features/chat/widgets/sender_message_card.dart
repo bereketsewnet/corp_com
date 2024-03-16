@@ -2,7 +2,7 @@ import 'package:corp_com/features/chat/widgets/display_all_file.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_to/swipe_to.dart';
 
-import '../../../colors.dart';
+import '../../../common/utils/colors.dart';
 import '../../../common/enums/message_enum.dart';
 
 

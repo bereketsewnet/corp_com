@@ -12,7 +12,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../colors.dart';
+import '../../../common/utils/colors.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String receiverUserId;

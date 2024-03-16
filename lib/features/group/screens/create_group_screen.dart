@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../colors.dart';
+import '../../../common/utils/colors.dart';
 import '../../../common/utils/utils.dart';
 import '../controller/group_controller.dart';
 import '../widgets/select_contacts_group.dart';

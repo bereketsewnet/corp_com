@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../colors.dart';
+import '../common/utils/colors.dart';
 
 class WebProfileBar extends StatelessWidget {
   const WebProfileBar({Key? key}) : super(key: key);

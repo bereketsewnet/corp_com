@@ -1,14 +1,12 @@
 import 'package:corp_com/features/chat/controller/chat_controller.dart';
-import 'package:corp_com/features/chat/repositories/chat_repository.dart';
 import 'package:corp_com/models/chat_contact.dart';
 import 'package:corp_com/models/group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../colors.dart';
+import '../../../common/utils/colors.dart';
 import '../../../common/widgets/loader.dart';
-import '../../../info.dart';
 import '../screens/mobile_chat_screen.dart';
 
 class ContactsList extends ConsumerWidget {

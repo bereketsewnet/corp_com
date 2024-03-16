@@ -2,7 +2,7 @@ import 'package:corp_com/features/status/screens/status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../colors.dart';
+import '../../../common/utils/colors.dart';
 import '../../../common/widgets/loader.dart';
 import '../../../models/status_model.dart';
 import '../controller/status_controller.dart';

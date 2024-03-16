@@ -7,7 +7,7 @@ import 'package:corp_com/features/status/screens/confirm_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../colors.dart';
+import '../common/utils/colors.dart';
 import '../features/chat/widgets/contacts_list.dart';
 import '../features/group/screens/create_group_screen.dart';
 import '../features/status/screens/status_contacts_screen.dart';

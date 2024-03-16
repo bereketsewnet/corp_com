@@ -7,7 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'colors.dart';
+import 'common/utils/colors.dart';
 import 'common/widgets/error.dart';
 import 'common/widgets/loader.dart';
 import 'firebase_options.dart';
