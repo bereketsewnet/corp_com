@@ -1,5 +1,6 @@
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/auth/repository/auth_repository.dart';
+import 'package:corp_com/features/auth/screens/choose_login_method.dart';
 import 'package:corp_com/features/landing/screens.dart';
 import 'package:corp_com/routher.dart';
 import 'package:corp_com/screens/mobile_layout_screen.dart';
@@ -41,7 +42,7 @@ class MyApp extends ConsumerWidget {
       home: ref.watch(userDataAuthProvider).when(
         data: (user) {
           if (user == null) {
-            return const LandingScreen();
+            return const ChooseLoginMethod();
           }
           return const MobileLayoutScreen();
         },

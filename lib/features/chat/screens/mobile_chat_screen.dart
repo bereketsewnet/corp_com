@@ -1,3 +1,4 @@
+import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/common/widgets/loader.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/call/controller/call_controller.dart';
@@ -56,7 +57,7 @@ class MobileChatScreen extends ConsumerWidget {
           centerTitle: false,
           actions: [
             IconButton(
-              onPressed: () => makeCall(ref, context),
+              onPressed: () => showPlatfrom(ref, context),
               icon: const Icon(Icons.video_call),
             ),
             IconButton(
@@ -95,5 +96,14 @@ class MobileChatScreen extends ConsumerWidget {
           profilePic,
           isGroupChat,
         );
+  }
+
+  void showPlatfrom (WidgetRef ref, BuildContext context) async{
+    String platform = await ref.read(authControllerProvider).getPlatform();
+    if(platform == 'IOS'){
+      showSnackBar(context: context, content: 'IOS');
+    }else if(platform == 'Android'){
+      showSnackBar(context: context, content: 'Android');
+    }
   }
 }

@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
+class LoginWithPhoneScreen extends ConsumerStatefulWidget {
   static const routeName = '/login-screen';
 
-  const LoginScreen({super.key});
+  const LoginWithPhoneScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginWithPhoneScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginWithPhoneScreen> {
   final phoneController = TextEditingController();
   Country? country;
 

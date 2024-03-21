@@ -1,6 +1,6 @@
 import 'package:corp_com/common/utils/colors.dart';
 import 'package:corp_com/common/widgets/custom_button.dart';
-import 'package:corp_com/features/auth/screens/login_screen.dart';
+import 'package:corp_com/features/auth/screens/login_with_phone_screen.dart';
 import 'package:flutter/material.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -50,6 +50,6 @@ class LandingScreen extends StatelessWidget {
   }
 
   void navigateToLoginScreen(BuildContext context) {
-    Navigator.pushNamed(context, LoginScreen.routeName);
+    Navigator.pushNamed(context, LoginWithPhoneScreen.routeName);
   }
 }

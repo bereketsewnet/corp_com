@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -74,6 +74,23 @@ class AuthRepository {
     }
   }
 
+   signUpEmailAndPassword(String email, String password, BuildContext context) async {
+    try {
+      UserCredential credential = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        UserInformationScreen.routeName,
+            (route) => false,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    return null;
+  }
+
   void saveUserDataToFirebase({
     required String name,
     required File? profilePic,
@@ -82,6 +99,7 @@ class AuthRepository {
   }) async {
     try {
       String uid = auth.currentUser!.uid;
+      String email = auth.currentUser!.email ?? 'default@gmail.com';
       String photoUrl =
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
 
@@ -114,6 +132,7 @@ class AuthRepository {
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
+      showSnackBar(context: context, content: 'ee');
     }
   }
 

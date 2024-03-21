@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:corp_com/common/widgets/error.dart';
-import 'package:corp_com/features/auth/screens/login_screen.dart';
+import 'package:corp_com/features/auth/screens/choose_login_method.dart';
+import 'package:corp_com/features/auth/screens/login_with_phone_screen.dart';
 import 'package:corp_com/features/auth/screens/otp_screen.dart';
 import 'package:corp_com/features/chat/screens/mobile_chat_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,9 @@ import 'models/status_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case LoginScreen.routeName:
+    case LoginWithPhoneScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => const LoginScreen(),
+        builder: (context) => const LoginWithPhoneScreen(),
       );
     case OTPScreen.routeName:
       final verificationId = settings.arguments as String;
@@ -71,6 +72,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case CreateGroupScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const CreateGroupScreen(),
+      );
+
+    case ChooseLoginMethod.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const ChooseLoginMethod(),
       );
 
     default:

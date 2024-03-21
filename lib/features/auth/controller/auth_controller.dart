@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:corp_com/common/repositories/common_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +14,7 @@ final userDataAuthProvider = FutureProvider((ref) {
   final authController = ref.watch(authControllerProvider);
   return authController.getUserData();
 });
+
 class AuthController {
   final AuthRepository authRepository;
   final ProviderRef ref;
@@ -21,7 +23,8 @@ class AuthController {
     required this.authRepository,
     required this.ref,
   });
-  Future<UserModel?> getUserData() async{
+
+  Future<UserModel?> getUserData() async {
     UserModel? user = await authRepository.getCurrentUserData();
     return user;
   }
@@ -60,4 +63,19 @@ class AuthController {
 //     UserModel? user = await authRepository.getCurrentUserData();
 //     return user;
 //   }
+
+  Future<String> getPlatform() async {
+    String platform =
+        await ref.read(commonRepositoryProvider).getCurrentPlatform();
+    return platform;
+  }
+
+  signUpWithEmailAndPassword(
+      String email, String password, BuildContext context) async {
+    await ref.read(authRepositoryProvider).signUpEmailAndPassword(
+          email,
+          password,
+          context,
+        );
+  }
 }

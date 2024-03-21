@@ -455,7 +455,7 @@ packages:
     source: hosted
     version: "2.0.3"
   flutter_platform_widgets:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: flutter_platform_widgets
       sha256: "107d5bc9a167b4e268cba44075ee399b6b2c63d44ede28f7e8c983d7fa4b59be"
