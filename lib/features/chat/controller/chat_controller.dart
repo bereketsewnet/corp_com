@@ -6,6 +6,7 @@ import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/chat/repositories/chat_repository.dart';
 import 'package:corp_com/models/group.dart';
 import 'package:corp_com/models/message.dart';
+import 'package:corp_com/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,6 +31,10 @@ class ChatController {
 
   Stream<List<ChatContact>> chatContacts() {
     return chatRepository.getChatContacts();
+  }
+
+  Stream<List<UserModel>> getAllUser() {
+    return chatRepository.getAllUsers();
   }
 
   Stream<List<Group>> chatGroups() {

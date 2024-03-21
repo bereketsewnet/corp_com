@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:corp_com/common/screens/display_all_users.dart';
 import 'package:corp_com/common/widgets/error.dart';
 import 'package:corp_com/features/auth/screens/choose_login_method.dart';
 import 'package:corp_com/features/auth/screens/login_with_phone_screen.dart';
@@ -77,6 +78,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ChooseLoginMethod.routeName:
       return MaterialPageRoute(
         builder: (context) => const ChooseLoginMethod(),
+      );
+
+    case DisplayAllUsers.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const DisplayAllUsers(),
       );
 
     default:

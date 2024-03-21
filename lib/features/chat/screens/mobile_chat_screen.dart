@@ -1,3 +1,4 @@
+
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/common/widgets/loader.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
@@ -20,10 +21,10 @@ class MobileChatScreen extends ConsumerWidget {
 
   const MobileChatScreen(
       {Key? key,
-      required this.name,
-      required this.uid,
-      required this.isGroupChat,
-      required this.profilePic})
+        required this.name,
+        required this.uid,
+        required this.isGroupChat,
+        required this.profilePic})
       : super(key: key);
 
   @override
@@ -35,25 +36,25 @@ class MobileChatScreen extends ConsumerWidget {
           title: isGroupChat
               ? Text(name)
               : StreamBuilder<UserModel>(
-                  stream: ref.read(authControllerProvider).userDataById(uid),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Loader();
-                    }
-                    return Column(
-                      children: [
-                        Text(name),
-                        Text(
-                          snapshot.data!.isOnline ? 'Online' : 'Offline',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+            stream: ref.read(authControllerProvider).userDataById(uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Loader();
+              }
+              return Column(
+                children: [
+                  Text(name),
+                  Text(
+                    snapshot.data!.isOnline ? 'Online' : 'Offline',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
           centerTitle: false,
           actions: [
             IconButton(
@@ -90,12 +91,12 @@ class MobileChatScreen extends ConsumerWidget {
 
   void makeCall(WidgetRef ref, BuildContext context) {
     ref.read(callControllerProvider).makeCall(
-          context,
-          name,
-          uid,
-          profilePic,
-          isGroupChat,
-        );
+      context,
+      name,
+      uid,
+      profilePic,
+      isGroupChat,
+    );
   }
 
   void showPlatfrom (WidgetRef ref, BuildContext context) async{

@@ -76,7 +76,7 @@ class AuthRepository {
 
    signUpEmailAndPassword(String email, String password, BuildContext context) async {
     try {
-      UserCredential credential = await auth.createUserWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -99,7 +99,6 @@ class AuthRepository {
   }) async {
     try {
       String uid = auth.currentUser!.uid;
-      String email = auth.currentUser!.email ?? 'default@gmail.com';
       String photoUrl =
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
 
@@ -117,7 +116,7 @@ class AuthRepository {
         uid: uid,
         profilePic: photoUrl,
         isOnline: true,
-        phoneNumber: auth.currentUser!.phoneNumber!,
+        phoneNumber: auth.currentUser!.email!,
         groupId: [],
       );
 

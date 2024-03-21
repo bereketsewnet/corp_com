@@ -59,6 +59,17 @@ class ChatRepository {
     });
   }
 
+  Stream<List<UserModel>> getAllUsers() {
+    return firestore.collection('users').snapshots().asyncMap((event) async {
+      List<UserModel> allUser = [];
+      for(var document in event.docs){
+        var singleUser = UserModel.fromMap(document.data());
+        allUser.add(singleUser);
+      }
+      return allUser;
+    });
+  }
+
   Stream<List<Group>> getChatGroups() {
     return firestore.collection('groups').snapshots().map((event) {
       List<Group> groups = [];
