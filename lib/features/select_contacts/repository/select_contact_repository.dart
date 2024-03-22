@@ -44,7 +44,7 @@ class SelectContactRepository {
           ' ',
           '',
         );
-        if (selectedPhoneNum == userData.phoneNumber) {
+        if (selectedPhoneNum == userData.identifier) {
           isFound = true;
           Navigator.pushNamed(
             context,

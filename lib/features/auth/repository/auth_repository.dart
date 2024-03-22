@@ -58,6 +58,7 @@ class AuthRepository {
     required String verificationId,
     required String userOTP,
   }) async {
+    String signUpMethod = 'phone_number';
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
@@ -66,6 +67,7 @@ class AuthRepository {
       await auth.signInWithCredential(credential);
       Navigator.pushNamedAndRemoveUntil(
         context,
+        arguments: signUpMethod,
         UserInformationScreen.routeName,
         (route) => false,
       );
@@ -74,12 +76,14 @@ class AuthRepository {
     }
   }
 
-   signUpEmailAndPassword(String email, String password, BuildContext context) async {
+    signUpEmailAndPassword(String email, String password, BuildContext context) async {
+    String signUpMethod = 'email';
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       Navigator.pushNamedAndRemoveUntil(
         context,
+        arguments: signUpMethod,
         UserInformationScreen.routeName,
             (route) => false,
       );
@@ -88,7 +92,7 @@ class AuthRepository {
         print(e);
       }
     }
-    return null;
+    
   }
 
   void saveUserDataToFirebase({
@@ -96,11 +100,26 @@ class AuthRepository {
     required File? profilePic,
     required ProviderRef ref,
     required BuildContext context,
+    required String signUpMethod,
   }) async {
     try {
       String uid = auth.currentUser!.uid;
+      String indentifier;
       String photoUrl =
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
+
+      switch (signUpMethod) {
+        case 'email':
+          indentifier = auth.currentUser!.email!;
+          break;
+        case 'phone_number':
+          indentifier = auth.currentUser!.phoneNumber!;
+          break;
+        default:
+          indentifier = auth.currentUser!.email!;
+          break;
+
+      }
 
       if (profilePic != null) {
         photoUrl = await ref
@@ -116,7 +135,7 @@ class AuthRepository {
         uid: uid,
         profilePic: photoUrl,
         isOnline: true,
-        phoneNumber: auth.currentUser!.email!,
+        identifier: indentifier,
         groupId: [],
       );
 

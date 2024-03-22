@@ -5,6 +5,7 @@ import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:corp_com/features/status/screens/confirm_status_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -73,7 +74,9 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           actions: [
             IconButton(
               icon: const Icon(Icons.search, color: Colors.grey),
-              onPressed: () {},
+              onPressed: () async{
+                await FirebaseAuth.instance.signOut();
+              },
             ),
             PopupMenuButton(
               icon: const Icon(

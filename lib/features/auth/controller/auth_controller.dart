@@ -42,12 +42,13 @@ class AuthController {
   }
 
   void saveUserDataToFirebase(
-      BuildContext context, String name, File? profilePic) {
+      BuildContext context, String name, File? profilePic, String signUpMethod) {
     authRepository.saveUserDataToFirebase(
       name: name,
       profilePic: profilePic,
       ref: ref,
       context: context,
+      signUpMethod: signUpMethod,
     );
   }
 

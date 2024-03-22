@@ -99,7 +99,7 @@ class StatusRepository {
       Status status = Status(
         uid: uid,
         username: username,
-        phoneNumber: phoneNumber,
+        identifier: phoneNumber,
         photoUrl: statusImageUrls,
         createdAt: DateTime.now(),
         profilePic: profilePic,

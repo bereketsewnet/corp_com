@@ -30,8 +30,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
 
     case UserInformationScreen.routeName:
+      final signUpMethod = settings.arguments as String;
       return MaterialPageRoute(
-        builder: (context) => const UserInformationScreen(),
+        builder: (context) => UserInformationScreen(signUpMethod: signUpMethod),
       );
 
     case MobileChatScreen.routeName:

@@ -28,7 +28,7 @@ class StatusController {
       statusRepository.uploadStatus(
         username: value!.name,
         profilePic: value.profilePic,
-        phoneNumber: value.phoneNumber,
+        phoneNumber: value.identifier,
         statusImage: file,
         context: context,
       );

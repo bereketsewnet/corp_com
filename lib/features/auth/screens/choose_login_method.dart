@@ -1,5 +1,6 @@
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
+import 'package:corp_com/features/auth/screens/login_with_phone_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -44,15 +45,15 @@ class ChooseLoginMethod extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-          
+
                 // logo
                 const Icon(
                   Icons.lock,
                   size: 100,
                 ),
-          
+
                 const SizedBox(height: 30),
-          
+
                 // welcome back, you've been missed!
                 Text(
                   'Welcome back you\'ve been missed!',
@@ -61,27 +62,27 @@ class ChooseLoginMethod extends ConsumerWidget {
                     fontSize: 16,
                   ),
                 ),
-          
+
                 const SizedBox(height: 25),
-          
+
                 // username textfield
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
-          
+
                 const SizedBox(height: 10),
-          
+
                 // password textfield
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
-          
+
                 const SizedBox(height: 10),
-          
+
                 // forgot password?
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -95,16 +96,16 @@ class ChooseLoginMethod extends ConsumerWidget {
                     ],
                   ),
                 ),
-          
+
                 const SizedBox(height: 25),
-          
+
                 // sign in button
                 MyButton(
                   onTap: signUpWithEmail,
                 ),
-          
+
                 const SizedBox(height: 30),
-          
+
                 // or continue with
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -132,25 +133,25 @@ class ChooseLoginMethod extends ConsumerWidget {
                     ],
                   ),
                 ),
-          
+
                 const SizedBox(height: 30),
-          
+
                 // google + apple sign in buttons
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google button
                     SquareTile(imagePath: 'assets/google.png'),
-          
+
                     SizedBox(width: 25),
-          
+
                     // apple button
                     SquareTile(imagePath: 'assets/apple.png')
                   ],
                 ),
-          
+
                 const SizedBox(height: 30),
-          
+
                 // not a member? register now
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -160,11 +161,19 @@ class ChooseLoginMethod extends ConsumerWidget {
                       style: TextStyle(color: Colors.grey[700]),
                     ),
                     const SizedBox(width: 4),
-                    const Text(
-                      'Register now',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          LoginWithPhoneScreen.routeName,
+                        );
+                      },
+                      child: const Text(
+                        'Register now',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],

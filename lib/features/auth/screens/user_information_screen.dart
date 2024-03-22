@@ -6,7 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserInformationScreen extends ConsumerStatefulWidget {
   static const routeName = '/user-information';
-  const UserInformationScreen({super.key});
+  final signUpMethod;
+  const UserInformationScreen({super.key, required this.signUpMethod});
   @override
   ConsumerState<UserInformationScreen> createState() => _UserInformationScreenState();
 }
@@ -88,7 +89,7 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
     String name = nameController.text.trim();
 
     if(name.isNotEmpty){
-      ref.read(authControllerProvider).saveUserDataToFirebase(context, name, image);
+      ref.read(authControllerProvider).saveUserDataToFirebase(context, name, image,widget.signUpMethod);
     }
   }
 

@@ -102,7 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginWithPhoneScreen> {
 
   void sendPhoneNumber() {
     String phoneNumber = phoneController.text.trim();
-    if (country != null && phoneNumber.isNotEmpty && phoneNumber.length > 9) {
+    if (country != null && phoneNumber.isNotEmpty && phoneNumber.length >= 9) {
       ref
           .read(authControllerProvider)
           .signInWithPhone(context, '+${country!.phoneCode}$phoneNumber');
