@@ -7,8 +7,10 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(error ?? '404 Page not found'),
+    return Scaffold(
+      body: Center(
+        child: Text(error ?? '404 Page not found'),
+      ),
     );
   }
 }

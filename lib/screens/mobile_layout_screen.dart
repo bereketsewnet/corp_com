@@ -1,20 +1,22 @@
-
 import 'dart:io';
 
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
+import 'package:corp_com/features/auth/screens/choose_login_method.dart';
 import 'package:corp_com/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:corp_com/features/status/screens/confirm_status_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../common/screens/display_all_users.dart';
 import '../common/utils/colors.dart';
 import '../features/chat/widgets/contacts_list.dart';
 import '../features/group/screens/create_group_screen.dart';
 import '../features/status/screens/status_contacts_screen.dart';
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {
+  static const String routeName = '/mobile-layout';
   const MobileLayoutScreen({Key? key}) : super(key: key);
 
   @override
@@ -74,9 +76,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           actions: [
             IconButton(
               icon: const Icon(Icons.search, color: Colors.grey),
-              onPressed: () async{
-                await FirebaseAuth.instance.signOut();
-              },
+              onPressed: () {},
             ),
             PopupMenuButton(
               icon: const Icon(
@@ -89,10 +89,21 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
                     'Create Group',
                   ),
                   onTap: () => Future(
-                        () => Navigator.pushNamed(
+                    () => Navigator.pushNamed(
                         context, CreateGroupScreen.routeName),
                   ),
-                )
+                ),
+                PopupMenuItem(
+                  child: const Text(
+                    'Logout',
+                  ),
+                  onTap: () => Future(
+                    () async {
+                      await FirebaseAuth.instance.signOut();
+                      Navigator.pushNamed(context, ChooseLoginMethod.routeName);
+                    },
+                  ),
+                ),
               ],
             ),
           ],
@@ -130,7 +141,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             if (tabBarController.index == 0) {
-              Navigator.pushNamed(context, SelectContactsScreen.routeName);
+              Navigator.pushNamed(context, DisplayAllUsers.routeName);
             } else {
               File? pickedImage = await pickImageFromGallery(context);
               if (pickedImage != null) {

@@ -33,6 +33,10 @@ class AuthController {
     authRepository.signInWithPhone(context, phoneNumber);
   }
 
+  void signInWithEmailAndPassword(String email, String password, BuildContext context) {
+    authRepository.signInEmailAndPassword(email, password, context);
+  }
+
   void verifyOTP(BuildContext context, String verificationId, String userOTP) {
     authRepository.verifyOTP(
       context: context,

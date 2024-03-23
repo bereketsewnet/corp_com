@@ -6,6 +6,7 @@ import 'package:corp_com/features/auth/screens/choose_login_method.dart';
 import 'package:corp_com/features/auth/screens/login_with_phone_screen.dart';
 import 'package:corp_com/features/auth/screens/otp_screen.dart';
 import 'package:corp_com/features/chat/screens/mobile_chat_screen.dart';
+import 'package:corp_com/screens/mobile_layout_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'features/auth/screens/user_information_screen.dart';
@@ -84,6 +85,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case DisplayAllUsers.routeName:
       return MaterialPageRoute(
         builder: (context) => const DisplayAllUsers(),
+      );
+
+    case MobileLayoutScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const MobileLayoutScreen(),
       );
 
     default:

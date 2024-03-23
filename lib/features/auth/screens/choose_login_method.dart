@@ -4,6 +4,8 @@ import 'package:corp_com/features/auth/screens/login_with_phone_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/widgets/error.dart';
+import '../../../common/widgets/loader.dart';
 import '../widgets/my_button.dart';
 import '../widgets/my_textfield.dart';
 import '../widgets/square_tile.dart';
@@ -35,6 +37,23 @@ class ChooseLoginMethod extends ConsumerWidget {
         showSnackBar(context: context, content: 'Error');
       }
     }
+
+    void signInWithEmail() {
+      String email, password;
+
+      email = emailController.text.trim();
+      password = passwordController.text.trim();
+      if (email.isNotEmpty && password.isNotEmpty && password.length > 5) {
+        ref.read(authControllerProvider).signInWithEmailAndPassword(
+              email,
+              password,
+              context,
+            );
+      } else {
+        showSnackBar(context: context, content: 'Error');
+      }
+    }
+
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -101,7 +120,22 @@ class ChooseLoginMethod extends ConsumerWidget {
 
                 // sign in button
                 MyButton(
-                  onTap: signUpWithEmail,
+                  // onTap: signUpWithEmail,
+                  onTap: () {
+                    ref.watch(userDataAuthProvider).when(
+                          data: (user) {
+                            if(user == null){
+                              signInWithEmail();
+                            }else {
+                              signUpWithEmail();
+                            }
+                          },
+                          error: (err, trace) {
+                            const ErrorScreen();
+                          },
+                          loading: () => const Loader(),
+                        );
+                  },
                 ),
 
                 const SizedBox(height: 30),

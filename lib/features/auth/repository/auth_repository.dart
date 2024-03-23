@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:corp_com/common/utils/utils.dart';
+import 'package:corp_com/features/chat/screens/mobile_chat_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -87,12 +88,23 @@ class AuthRepository {
         UserInformationScreen.routeName,
             (route) => false,
       );
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context: context, content: 'Up--${e.toString()}');
     }
     
+  }
+
+  signInEmailAndPassword(String email, String password, BuildContext context) async {
+    try{
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      Navigator.pushNamed(
+        context,
+        MobileLayoutScreen.routeName,
+
+      );
+    }on FirebaseAuthException catch (e) {
+      showSnackBar(context: context, content: 'In--${e.toString()}');
+    }
   }
 
   void saveUserDataToFirebase({
