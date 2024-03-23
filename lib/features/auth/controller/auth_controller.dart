@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:corp_com/common/repositories/common_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,8 @@ final userDataAuthProvider = FutureProvider((ref) {
   final authController = ref.watch(authControllerProvider);
   return authController.getUserData();
 });
+
+
 
 class AuthController {
   final AuthRepository authRepository;
@@ -31,6 +34,14 @@ class AuthController {
 
   void signInWithPhone(BuildContext context, String phoneNumber) {
     authRepository.signInWithPhone(context, phoneNumber);
+  }
+
+  void logOut() {
+    authRepository.signOut();
+  }
+
+  Future<UserCredential?> signInWithGoogle (BuildContext context) async{
+   return authRepository.signInWithGoogle(context);
   }
 
   void signInWithEmailAndPassword(String email, String password, BuildContext context) {

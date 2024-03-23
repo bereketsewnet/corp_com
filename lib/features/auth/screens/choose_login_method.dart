@@ -54,6 +54,9 @@ class ChooseLoginMethod extends ConsumerWidget {
       }
     }
 
+    signInWithGoogle(BuildContext context) async{
+    final user = await ref.read(authControllerProvider).signInWithGoogle(context);
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -124,9 +127,9 @@ class ChooseLoginMethod extends ConsumerWidget {
                   onTap: () {
                     ref.watch(userDataAuthProvider).when(
                           data: (user) {
-                            if(user == null){
+                            if (user == null) {
                               signInWithEmail();
-                            }else {
+                            } else {
                               signUpWithEmail();
                             }
                           },
@@ -171,16 +174,24 @@ class ChooseLoginMethod extends ConsumerWidget {
                 const SizedBox(height: 30),
 
                 // google + apple sign in buttons
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google button
-                    SquareTile(imagePath: 'assets/google.png'),
+                    SquareTile(
+                      imagePath: 'assets/google.png',
+                      onTap: () {
+                        signInWithGoogle(context);
+                      },
+                    ),
 
-                    SizedBox(width: 25),
+                    const SizedBox(width: 25),
 
                     // apple button
-                    SquareTile(imagePath: 'assets/apple.png')
+                    SquareTile(
+                      imagePath: 'assets/apple.png',
+                      onTap: () {},
+                    ),
                   ],
                 ),
 

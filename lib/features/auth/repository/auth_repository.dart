@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:corp_com/common/utils/utils.dart';
+import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/chat/screens/mobile_chat_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../common/repositories/common_firebase_storage_repository.dart';
 import '../../../models/user_model.dart';
@@ -127,6 +129,9 @@ class AuthRepository {
         case 'phone_number':
           indentifier = auth.currentUser!.phoneNumber!;
           break;
+        case 'google':
+          indentifier = auth.currentUser!.email!;
+          break;
         default:
           indentifier = auth.currentUser!.email!;
           break;
@@ -162,8 +167,35 @@ class AuthRepository {
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
-      showSnackBar(context: context, content: 'ee');
     }
+  }
+
+   Future<UserCredential?> signInWithGoogle(BuildContext context) async{
+    String signUpMethod = 'google';
+
+    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication? googleAuth  = await googleUser?.authentication;
+
+    AuthCredential  credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken
+    );
+
+    UserCredential userCredential = await auth.signInWithCredential(credential);
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      arguments: signUpMethod,
+      UserInformationScreen.routeName,
+          (route) => false,
+    );
+    print(userCredential.user?.displayName);
+    return userCredential;
+
+  }
+
+  void signOut() async {
+    await GoogleSignIn().signOut();
+    auth.signOut();
   }
 
   Stream<UserModel> userData(String userId) {

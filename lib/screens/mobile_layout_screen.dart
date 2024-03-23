@@ -99,7 +99,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
                   ),
                   onTap: () => Future(
                     () async {
-                      await FirebaseAuth.instance.signOut();
+                      ref.read(authControllerProvider).logOut();
                       Navigator.pushNamed(context, ChooseLoginMethod.routeName);
                     },
                   ),
