@@ -55,7 +55,7 @@ class ChooseLoginMethod extends ConsumerWidget {
     }
 
     signInWithGoogle(BuildContext context) async{
-    final user = await ref.read(authControllerProvider).signInWithGoogle(context);
+      ref.read(authControllerProvider).checkUserPlatFrom(context);
     }
 
     return Scaffold(

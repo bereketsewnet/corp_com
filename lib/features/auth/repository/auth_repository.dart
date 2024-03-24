@@ -2,35 +2,35 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:corp_com/common/utils/utils.dart';
-import 'package:corp_com/features/auth/controller/auth_controller.dart';
-import 'package:corp_com/features/chat/screens/mobile_chat_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../common/repositories/common_firebase_storage_repository.dart';
+import '../../../common/repositories/common_repository.dart';
+import '../../../common/widgets/error.dart';
+import '../../../common/widgets/loader.dart';
 import '../../../models/user_model.dart';
 import '../../../screens/mobile_layout_screen.dart';
+import '../controller/auth_controller.dart';
 import '../screens/otp_screen.dart';
 import '../screens/user_information_screen.dart';
 
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(
-    auth: FirebaseAuth.instance,
-    firestore: FirebaseFirestore.instance,
-  ),
+      auth: FirebaseAuth.instance,
+      firestore: FirebaseFirestore.instance,
+      ref: ref),
 );
 
 class AuthRepository {
   final FirebaseAuth auth;
   final FirebaseFirestore firestore;
+  final ProviderRef ref;
 
-  AuthRepository({
-    required this.auth,
-    required this.firestore,
-  });
+  AuthRepository(
+      {required this.auth, required this.firestore, required this.ref});
 
   void signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
@@ -79,7 +79,8 @@ class AuthRepository {
     }
   }
 
-    signUpEmailAndPassword(String email, String password, BuildContext context) async {
+  signUpEmailAndPassword(
+      String email, String password, BuildContext context) async {
     String signUpMethod = 'email';
     try {
       await auth.createUserWithEmailAndPassword(
@@ -88,23 +89,22 @@ class AuthRepository {
         context,
         arguments: signUpMethod,
         UserInformationScreen.routeName,
-            (route) => false,
+        (route) => false,
       );
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: 'Up--${e.toString()}');
     }
-    
   }
 
-  signInEmailAndPassword(String email, String password, BuildContext context) async {
-    try{
+  signInEmailAndPassword(
+      String email, String password, BuildContext context) async {
+    try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       Navigator.pushNamed(
         context,
         MobileLayoutScreen.routeName,
-
       );
-    }on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: 'In--${e.toString()}');
     }
   }
@@ -135,7 +135,6 @@ class AuthRepository {
         default:
           indentifier = auth.currentUser!.email!;
           break;
-
       }
 
       if (profilePic != null) {
@@ -170,27 +169,24 @@ class AuthRepository {
     }
   }
 
-   Future<UserCredential?> signInWithGoogle(BuildContext context) async{
+  Future<UserCredential?> signInWithGoogle(BuildContext context) async {
     String signUpMethod = 'google';
 
     GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    GoogleSignInAuthentication? googleAuth  = await googleUser?.authentication;
+    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    AuthCredential  credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken
-    );
+    AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
 
     UserCredential userCredential = await auth.signInWithCredential(credential);
     Navigator.pushNamedAndRemoveUntil(
       context,
       arguments: signUpMethod,
       UserInformationScreen.routeName,
-          (route) => false,
+      (route) => false,
     );
     print(userCredential.user?.displayName);
     return userCredential;
-
   }
 
   void signOut() async {
@@ -229,5 +225,23 @@ class AuthRepository {
             event.data()!,
           ),
         );
+  }
+
+  checkUserPlatform(BuildContext context)  {
+    ref.read(currentUserProvider).when(
+          data: (data) async {
+            if(data == 'Android'){
+           final user = await signInWithGoogle(context);
+            }else{
+              showSnackBar(context: context, content: 'Other');
+            }
+          },
+          error: (err, trace) {
+            const ErrorScreen();
+          },
+          loading: () => const Loader(),
+        );
+
+    // IOS , Android , Web
   }
 }

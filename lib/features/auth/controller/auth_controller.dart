@@ -27,6 +27,10 @@ class AuthController {
     required this.ref,
   });
 
+  void checkUserPlatFrom(BuildContext context) async {
+    authRepository.checkUserPlatform(context);
+  }
+
   Future<UserModel?> getUserData() async {
     UserModel? user = await authRepository.getCurrentUserData();
     return user;
