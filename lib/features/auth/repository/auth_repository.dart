@@ -156,6 +156,8 @@ class AuthRepository {
       );
 
       await firestore.collection('users').doc(uid).set(user.toMap());
+      // save all data local storage
+      await saveUserDataToSharedPreferences(user);
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -209,14 +211,19 @@ class AuthRepository {
   }
 
   Future<UserModel?> getCurrentUserData() async {
-    var userData =
-        await firestore.collection('users').doc(auth.currentUser?.uid).get();
-    UserModel? user;
-    if (userData.data() != null) {
-      user = UserModel.fromMap(userData.data()!);
-    }
+   final userFromLocal = await getUserDataFromSharedPreferences();
+   if(userFromLocal != null) {
+     return userFromLocal;
+   }else{
+     var userData =
+     await firestore.collection('users').doc(auth.currentUser?.uid).get();
+     UserModel? user;
+     if (userData.data() != null) {
+       user = UserModel.fromMap(userData.data()!);
+     }
+     return user;
+   }
 
-    return user;
   }
 
   Stream<UserModel> UserData(String userId) {

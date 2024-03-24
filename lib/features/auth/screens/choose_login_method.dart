@@ -127,7 +127,7 @@ class ChooseLoginMethod extends ConsumerWidget {
                   onTap: () {
                     ref.watch(userDataAuthProvider).when(
                           data: (user) {
-                            if (user == null) {
+                            if (user != null) {
                               signInWithEmail();
                             } else {
                               signUpWithEmail();
