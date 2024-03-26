@@ -92,6 +92,7 @@ class ChooseLoginMethod extends ConsumerWidget {
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
+                  type: TextInputType.emailAddress,
                 ),
 
                 const SizedBox(height: 10),
@@ -127,7 +128,7 @@ class ChooseLoginMethod extends ConsumerWidget {
                   onTap: () {
                     ref.watch(userDataAuthProvider).when(
                           data: (user) {
-                            if (user != null) {
+                            if (user == null) {
                               signInWithEmail();
                             } else {
                               signUpWithEmail();

@@ -5,13 +5,15 @@ class MyTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final void Function(String)? onChange;
+  final TextInputType? type;
 
   const MyTextField({
     super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
-    this.onChange
+    this.onChange,
+    this.type,
   });
 
   @override
@@ -22,6 +24,7 @@ class MyTextField extends StatelessWidget {
         onChanged: onChange,
         controller: controller,
         obscureText: obscureText,
+        keyboardType: type,
         decoration: InputDecoration(
             enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),

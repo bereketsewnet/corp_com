@@ -100,6 +100,10 @@ class AuthRepository {
       String email, String password, BuildContext context) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
+     final user = await getCurrentUserData();
+      // save all data local storage
+      if(user != null)
+        await saveUserDataToSharedPreferences(user);
       Navigator.pushNamed(
         context,
         MobileLayoutScreen.routeName,
@@ -212,7 +216,7 @@ class AuthRepository {
 
   Future<UserModel?> getCurrentUserData() async {
    final userFromLocal = await getUserDataFromSharedPreferences();
-   if(userFromLocal != null) {
+   if(userFromLocal != null && userFromLocal.name != '') {
      return userFromLocal;
    }else{
      var userData =

@@ -83,6 +83,63 @@ class ChatRepository {
     });
   }
 
+  Future<int> getSpesficUnreadMessage(String receiverUserId) async {
+    final user = await getUserDataFromSharedPreferences();
+    String uid;
+    if(user != null){
+      uid = user.uid;
+    }else {
+      uid = auth.currentUser!.uid;
+    }
+
+    final querySnapshot = await firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .doc(receiverUserId)
+        .collection('messages')
+        .orderBy('timeSent')
+        .get();
+    int unreadMessage = 0;
+    for (var document in querySnapshot.docs) {
+      final mm = Message.fromMap(document.data());
+      if(!mm.isSeen && mm.receiverId == uid){
+        unreadMessage++;
+      }
+
+    }
+    return unreadMessage;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllUserUnreadMessage() async {
+    final user = await getUserDataFromSharedPreferences();
+    String uid;
+    if(user != null){
+      uid = user.uid;
+    }else {
+      uid = auth.currentUser!.uid;
+    }
+    List<Map<String, dynamic>> unreadMessagesList = [];
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(uid)
+        .collection('chats')
+        .get();
+
+    for (var documentSnapshot in querySnapshot.docs) {
+      String receiverUserId = documentSnapshot.id;
+     final unreadMessages = await getSpesficUnreadMessage(receiverUserId);
+     Map<String, dynamic> unread = {
+       receiverUserId : unreadMessages,
+     };
+     unreadMessagesList.add(Map<String, dynamic>.from(unread));
+
+    }
+
+    return unreadMessagesList;
+  }
+
   Stream<List<Message>> getChatStream(String receiverUserId) {
     return firestore
         .collection('users')
@@ -401,9 +458,16 @@ class ChatRepository {
       String messageId,
       ) async {
     try {
+      final user = await getUserDataFromSharedPreferences();
+      String uid;
+      if(user != null){
+        uid = user.uid;
+      }else {
+       uid = auth.currentUser!.uid;
+      }
       await firestore
           .collection('users')
-          .doc(auth.currentUser!.uid)
+          .doc(uid)
           .collection('chats')
           .doc(receiverUserId)
           .collection('messages')
@@ -414,7 +478,7 @@ class ChatRepository {
           .collection('users')
           .doc(receiverUserId)
           .collection('chats')
-          .doc(auth.currentUser!.uid)
+          .doc(uid)
           .collection('messages')
           .doc(messageId)
           .update({'isSeen': true});
