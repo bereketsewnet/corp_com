@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../common/utils/colors.dart';
 import '../widgets/chat_list.dart';
-import '../features/chat/widgets/contacts_list.dart';
+import '../features/chat/widgets/chat_users_list.dart';
 import '../widgets/web_chat_appbar.dart';
 import '../widgets/web_profile_bar.dart';
 import '../widgets/web_search_bar.dart';
@@ -22,7 +22,7 @@ class WebLayoutScreen extends StatelessWidget {
                 children: const [
                   WebProfileBar(),
                   WebSearchBar(),
-                  ContactsList(),
+                  ChattingUsersList(),
                 ],
               ),
             ),

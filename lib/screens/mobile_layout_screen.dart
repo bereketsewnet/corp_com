@@ -11,12 +11,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../common/screens/display_all_users.dart';
 import '../common/utils/colors.dart';
-import '../features/chat/widgets/contacts_list.dart';
+import '../features/chat/widgets/chat_users_list.dart';
 import '../features/group/screens/create_group_screen.dart';
 import '../features/status/screens/status_contacts_screen.dart';
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {
   static const String routeName = '/mobile-layout';
+
   const MobileLayoutScreen({Key? key}) : super(key: key);
 
   @override
@@ -65,8 +66,15 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           elevation: 0,
           backgroundColor: appBarColor,
           centerTitle: false,
+          leading: IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.menu_rounded,
+              color: Colors.grey,
+            ),
+          ),
           title: const Text(
-            'WhatsApp',
+            'CorpCom',
             style: TextStyle(
               fontSize: 20,
               color: Colors.grey,
@@ -100,6 +108,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
                   onTap: () => Future(
                     () async {
                       ref.read(authControllerProvider).logOut();
+                     await clearUserDataFromSharedPreferences();
                       Navigator.pushNamed(context, ChooseLoginMethod.routeName);
                     },
                   ),
@@ -122,10 +131,10 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
                 text: 'CHATS',
               ),
               Tab(
-                text: 'STATUS',
+                text: 'GROUP',
               ),
               Tab(
-                text: 'CALLS',
+                text: 'CHANEL',
               ),
             ],
           ),
@@ -133,7 +142,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
         body: TabBarView(
           controller: tabBarController,
           children: const [
-            ContactsList(),
+            ChattingUsersList(),
             StatusContactsScreen(),
             Text('hi'),
           ],

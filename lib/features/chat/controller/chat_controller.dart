@@ -49,6 +49,14 @@ class ChatController {
     return chatRepository.getGroupChatStream(groupId);
   }
 
+  Future<List<Map<String, dynamic>>> getAllUserUnreadMessage(){
+    return chatRepository.getAllUserUnreadMessage();
+  }
+
+  Future<int> getUnreadMessage(String receiverUserId){
+    return chatRepository.getSpesficUnreadMessage(receiverUserId);
+  }
+
   void sendTextMessage(
     BuildContext context,
     String text,
