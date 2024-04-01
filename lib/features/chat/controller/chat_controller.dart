@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/chat_contact.dart';
 
-final chatControllerProvider = Provider((ref) {
+final chatControllerProvider = Provider.autoDispose((ref) {
   final chatRepository = ref.watch(chatRepositoryProvider);
   return ChatController(
     chatRepository: chatRepository,
@@ -49,12 +49,12 @@ class ChatController {
     return chatRepository.getGroupChatStream(groupId);
   }
 
-  Future<List<Map<String, dynamic>>> getAllUserUnreadMessage(){
-    return chatRepository.getAllUserUnreadMessage();
-  }
+  // Future<List<Map<String, dynamic>>> getAllUserUnreadMessage() {
+  //   return chatRepository.getAllUserUnreadMessage();
+  // }
 
-  Future<int> getUnreadMessage(String receiverUserId){
-    return chatRepository.getSpesficUnreadMessage(receiverUserId);
+  Future<int> getUnreadMessage(String receiverUserId, BuildContext context, String uid) {
+    return chatRepository.getSpesficUnreadMessage(receiverUserId, context, uid);
   }
 
   void sendTextMessage(
@@ -110,5 +110,16 @@ class ChatController {
       receiverUserId,
       messageId,
     );
+  }
+
+  void setUnreadMessageIncrease(
+    BuildContext context,
+    String receiverUserId,
+  ) {
+    chatRepository.setUnreadMessageIncrease(context, receiverUserId);
+  }
+
+  getReceiverIds(BuildContext context) {
+    chatRepository.getReceiverIds(context);
   }
 }

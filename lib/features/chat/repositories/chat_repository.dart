@@ -15,7 +15,7 @@ import '../../../models/message.dart';
 import '../../../models/user_model.dart';
 
 final chatRepositoryProvider = Provider(
-      (ref) => ChatRepository(
+  (ref) => ChatRepository(
     firestore: FirebaseFirestore.instance,
     auth: FirebaseAuth.instance,
   ),
@@ -24,6 +24,7 @@ final chatRepositoryProvider = Provider(
 class ChatRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
+
   ChatRepository({
     required this.firestore,
     required this.auth,
@@ -62,7 +63,7 @@ class ChatRepository {
   Stream<List<UserModel>> getAllUsers() {
     return firestore.collection('users').snapshots().asyncMap((event) async {
       List<UserModel> allUser = [];
-      for(var document in event.docs){
+      for (var document in event.docs) {
         var singleUser = UserModel.fromMap(document.data());
         allUser.add(singleUser);
       }
@@ -83,62 +84,80 @@ class ChatRepository {
     });
   }
 
-  Future<int> getSpesficUnreadMessage(String receiverUserId) async {
+  getReceiverIds(BuildContext context) async {
+    print('--------------------');
+
     final user = await getUserDataFromSharedPreferences();
     String uid;
-    if(user != null){
+    if (user != null) {
       uid = user.uid;
-    }else {
+    } else {
       uid = auth.currentUser!.uid;
     }
+    print(auth.currentUser!.uid);
+
+    // Assuming you have already initialized Firestore
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .get();
+
+    snapshot.docs.forEach((doc) async {
+      Map<String, dynamic> message = doc.data() as Map<String, dynamic>;
+     await getSpesficUnreadMessage(message['contactId'], context, uid);
+       print(message['contactId'] + '------------------');
+    });
+  }
+
+  getSpesficUnreadMessage(String receiverUserId, BuildContext context, String uid) async {
 
     final querySnapshot = await firestore
         .collection('users')
-        .doc(auth.currentUser!.uid)
+        .doc(uid)
         .collection('chats')
         .doc(receiverUserId)
         .collection('messages')
         .orderBy('timeSent')
         .get();
-    int unreadMessage = 0;
     for (var document in querySnapshot.docs) {
       final mm = Message.fromMap(document.data());
-      if(!mm.isSeen && mm.receiverId == uid){
-        unreadMessage++;
+      //print('--------- wow --------');
+      if (!mm.isSeen && mm.receiverId == uid) {
+       await setUnreadMessageIncrease(context, receiverUserId);
+       print('--------- wow --------');
       }
-
     }
-    return unreadMessage;
   }
 
-  Future<List<Map<String, dynamic>>> getAllUserUnreadMessage() async {
-    final user = await getUserDataFromSharedPreferences();
-    String uid;
-    if(user != null){
-      uid = user.uid;
-    }else {
-      uid = auth.currentUser!.uid;
-    }
-    List<Map<String, dynamic>> unreadMessagesList = [];
-
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
-        .collection('user')
-        .doc(uid)
-        .collection('chats')
-        .get();
-
-    for (var documentSnapshot in querySnapshot.docs) {
-      String receiverUserId = documentSnapshot.id;
-     final unreadMessages = await getSpesficUnreadMessage(receiverUserId);
-     Map<String, dynamic> unread = {
-       receiverUserId : unreadMessages,
-     };
-     unreadMessagesList.add(Map<String, dynamic>.from(unread));
-
-    }
-
-    return unreadMessagesList;
-  }
+  // Future<List<Map<String, dynamic>>> getAllUserUnreadMessage() async {
+  //   final user = await getUserDataFromSharedPreferences();
+  //   String uid;
+  //   if (user != null) {
+  //     uid = user.uid;
+  //   } else {
+  //     uid = auth.currentUser!.uid;
+  //   }
+  //   List<Map<String, dynamic>> unreadMessagesList = [];
+  //
+  //   QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+  //       .instance
+  //       .collection('user')
+  //       .doc(uid)
+  //       .collection('chats')
+  //       .get();
+  //
+  //   for (var documentSnapshot in querySnapshot.docs) {
+  //     String receiverUserId = documentSnapshot.id;
+  //     final unreadMessages = await getSpesficUnreadMessage(receiverUserId, );
+  //     Map<String, dynamic> unread = {
+  //       receiverUserId: unreadMessages,
+  //     };
+  //     unreadMessagesList.add(Map<String, dynamic>.from(unread));
+  //   }
+  //
+  //   return unreadMessagesList;
+  // }
 
   Stream<List<Message>> getChatStream(String receiverUserId) {
     return firestore
@@ -175,13 +194,13 @@ class ChatRepository {
   }
 
   void _saveDataToContactsSubcollection(
-      UserModel senderUserData,
-      UserModel? receiverUserData,
-      String text,
-      DateTime timeSent,
-      String receiverUserId,
-      bool isGroupChat,
-      ) async {
+    UserModel senderUserData,
+    UserModel? receiverUserData,
+    String text,
+    DateTime timeSent,
+    String receiverUserId,
+    bool isGroupChat,
+  ) async {
     if (isGroupChat) {
       await firestore.collection('groups').doc(receiverUserId).update({
         'lastMessage': text,
@@ -202,11 +221,11 @@ class ChatRepository {
           .collection('chats')
           .doc(auth.currentUser!.uid)
           .set(
-        receiverChatContact.toMap(),
-      );
+            receiverChatContact.toMap(),
+          );
       // users -> current user id  => chats -> receiver user id -> set data
       var senderChatContact = ChatContact(
-        name:receiverUserData!.name,
+        name: receiverUserData!.name,
         profilePic: receiverUserData.profilePic,
         contactId: receiverUserData.uid,
         timeSent: timeSent,
@@ -218,8 +237,8 @@ class ChatRepository {
           .collection('chats')
           .doc(receiverUserId)
           .set(
-        senderChatContact.toMap(),
-      );
+            senderChatContact.toMap(),
+          );
     }
   }
 
@@ -247,10 +266,10 @@ class ChatRepository {
       repliedTo: messageReply == null
           ? ''
           : messageReply.isMe
-          ? senderUsername
-          : receiverUserName ?? '',
+              ? senderUsername
+              : receiverUserName ?? '',
       repliedMessageType:
-      messageReply == null ? MessageEnum.text : messageReply.messageEnum,
+          messageReply == null ? MessageEnum.text : messageReply.messageEnum,
     );
     if (isGroupChat) {
       // groups -> group id -> chat -> message
@@ -260,8 +279,8 @@ class ChatRepository {
           .collection('chats')
           .doc(messageId)
           .set(
-        message.toMap(),
-      );
+            message.toMap(),
+          );
     } else {
       // users -> sender id -> receiver id -> messages -> message id -> store message
       await firestore
@@ -272,8 +291,8 @@ class ChatRepository {
           .collection('messages')
           .doc(messageId)
           .set(
-        message.toMap(),
-      );
+            message.toMap(),
+          );
       // users -> receiver id  -> sender id -> messages -> message id -> store message
       await firestore
           .collection('users')
@@ -283,8 +302,8 @@ class ChatRepository {
           .collection('messages')
           .doc(messageId)
           .set(
-        message.toMap(),
-      );
+            message.toMap(),
+          );
     }
   }
 
@@ -302,7 +321,7 @@ class ChatRepository {
 
       if (!isGroupChat) {
         var userDataMap =
-        await firestore.collection('users').doc(receiverUserId).get();
+            await firestore.collection('users').doc(receiverUserId).get();
         receiverUserData = UserModel.fromMap(userDataMap.data()!);
       }
 
@@ -351,14 +370,14 @@ class ChatRepository {
       String imageUrl = await ref
           .read(commonFirebaseStorageRepositoryProvider)
           .storeFileToFirebase(
-        'chat/${messageEnum.type}/${senderUserData.uid}/$receiverUserId/$messageId',
-        file,
-      );
+            'chat/${messageEnum.type}/${senderUserData.uid}/$receiverUserId/$messageId',
+            file,
+          );
 
       UserModel? receiverUserData;
       if (!isGroupChat) {
         var userDataMap =
-        await firestore.collection('users').doc(receiverUserId).get();
+            await firestore.collection('users').doc(receiverUserId).get();
         receiverUserData = UserModel.fromMap(userDataMap.data()!);
       }
 
@@ -420,7 +439,7 @@ class ChatRepository {
 
       if (!isGroupChat) {
         var userDataMap =
-        await firestore.collection('users').doc(receiverUserId).get();
+            await firestore.collection('users').doc(receiverUserId).get();
         receiverUserData = UserModel.fromMap(userDataMap.data()!);
       }
 
@@ -453,17 +472,17 @@ class ChatRepository {
   }
 
   void setChatMessageSeen(
-      BuildContext context,
-      String receiverUserId,
-      String messageId,
-      ) async {
+    BuildContext context,
+    String receiverUserId,
+    String messageId,
+  ) async {
     try {
       final user = await getUserDataFromSharedPreferences();
       String uid;
-      if(user != null){
+      if (user != null) {
         uid = user.uid;
-      }else {
-       uid = auth.currentUser!.uid;
+      } else {
+        uid = auth.currentUser!.uid;
       }
       await firestore
           .collection('users')
@@ -482,6 +501,48 @@ class ChatRepository {
           .collection('messages')
           .doc(messageId)
           .update({'isSeen': true});
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+   setUnreadMessageIncrease(
+    BuildContext context,
+    String receiverUserId,
+  ) async {
+    try {
+      final user = await getUserDataFromSharedPreferences();
+      String uid;
+      if (user != null) {
+        uid = user.uid;
+      } else {
+        uid = auth.currentUser!.uid;
+      }
+      // await firestore
+      //     .collection('users')
+      //     .doc(uid)
+      //     .collection('chats')
+      //     .doc(receiverUserId)
+      //     .update({'unread': FieldValue.increment(1)});
+
+      String path = 'users/$uid/chats/$receiverUserId';
+      DocumentReference docRef = firestore.doc(path);
+      // check if the document exist
+      DocumentSnapshot docSnapshot = await docRef.get();
+      if (docSnapshot.exists) {
+        Map<String, dynamic>? data =
+            docSnapshot.data() as Map<String, dynamic>?;
+        int currentUnreadCount = data?['unread'] ?? 0;
+        docRef.update({
+          'unread': 50,
+        });
+        print('-------- update -------');
+      } else {
+        docRef.update({
+          'unread': 1,
+        });
+        print('-------- set -------');
+      }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }

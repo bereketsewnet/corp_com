@@ -1,15 +1,18 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:corp_com/features/chat/controller/chat_controller.dart';
+import 'package:corp_com/features/chat/repositories/chat_repository.dart';
 import 'package:corp_com/models/chat_contact.dart';
 import 'package:corp_com/models/group.dart';
-import 'package:corp_com/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../common/utils/colors.dart';
 import '../../../common/widgets/loader.dart';
+import '../../../models/message.dart';
 import '../screens/mobile_chat_screen.dart';
 
 class ChattingUsersList extends ConsumerStatefulWidget {
@@ -20,22 +23,23 @@ class ChattingUsersList extends ConsumerStatefulWidget {
 }
 
 class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
+  int unreadMessagesCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+     getReceiverIds();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Future<int> getUnreadMessage(String receiverUserId) async {
-      return await ref
-          .watch(chatControllerProvider)
-          .getUnreadMessage(receiverUserId);
-    }
-
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: SingleChildScrollView(
         child: Column(
           children: [
             StreamBuilder<List<ChatContact>>(
-              stream: ref.watch(chatControllerProvider).chatContacts(),
+              stream: ref.read(chatControllerProvider).chatContacts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Loader();
@@ -46,17 +50,48 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     var chatContactData = snapshot.data![index];
+                    // String un = snapshot.data![index]['unread'];
 
-                    return FutureBuilder<int>(
-                      future: getUnreadMessage(chatContactData.contactId),
-                      builder: (context, snapshot) {
-                        // if (snapshot.connectionState ==
-                        //     ConnectionState.waiting) {
-                        //   return const Loader();
+                    return StreamBuilder<List<Message>>(
+                      stream: ref
+                          .read(chatControllerProvider)
+                          .chatStream(chatContactData.contactId),
+                      builder: (context, snap) {
+                        if (snap.connectionState == ConnectionState.waiting) {
+                          return Container();
+                        }
+                        getReceiverIds();
+                        // for (int i = 0; i < snap.data!.length; i++) {
+                        //   final messageData = snap.data![i];
+                        //   if (!messageData.isSeen &&
+                        //       messageData.receiverId ==
+                        //           FirebaseAuth.instance.currentUser!.uid) {
+                        //     setUnreadMessageIncrease(
+                        //       context,
+                        //       chatContactData.contactId,
+                        //     );
+                        //     print(1);
+                        //   }
                         // }
 
-                        int unread = snapshot.data ??
-                            0; // Use a default value of 0 if the data is null
+                        // snap.data!.forEach((messageData) {
+                        //   if (!messageData.isSeen &&
+                        //       messageData.receiverId ==
+                        //           FirebaseAuth.instance.currentUser!.uid) {
+                        //     // setUnreadMessageIncrease(
+                        //     //   context,
+                        //     //   chatContactData.contactId,
+                        //     // );
+                        //     ChatRepository(
+                        //       firestore: FirebaseFirestore.instance,
+                        //       auth: FirebaseAuth.instance,
+                        //     ).setUnreadMessageIncrease(
+                        //       context,
+                        //       chatContactData.contactId,
+                        //     );
+                        //     print(1);
+                        //   }
+                        // });
 
                         return Column(
                           children: [
@@ -84,9 +119,19 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
                                   ),
                                   subtitle: Padding(
                                     padding: const EdgeInsets.only(top: 6.0),
-                                    child: Text(
-                                      chatContactData.lastMessage,
-                                      style: const TextStyle(fontSize: 15),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.done_all_rounded,
+                                          color: Colors.lightBlueAccent,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          chatContactData.lastMessage,
+                                          style: const TextStyle(fontSize: 15),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   leading: CircleAvatar(
@@ -106,12 +151,12 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
                                           fontSize: 13,
                                         ),
                                       ),
-                                      unread != 0
+                                      chatContactData.unread != 0 && chatContactData.unread != null
                                           ? CircleAvatar(
                                               radius: 10,
                                               backgroundColor: Colors.red,
                                               child: Text(
-                                                unread.toString(),
+                                                chatContactData.unread.toString(),
                                               ),
                                             )
                                           : const CircleAvatar(radius: 0),
@@ -168,9 +213,19 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
                               ),
                               subtitle: Padding(
                                 padding: const EdgeInsets.only(top: 6.0),
-                                child: Text(
-                                  groupData.lastMessage,
-                                  style: const TextStyle(fontSize: 15),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.done_rounded,
+                                      color: Colors.lightBlueAccent,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      groupData.lastMessage,
+                                      style: const TextStyle(fontSize: 15),
+                                    ),
+                                  ],
                                 ),
                               ),
                               leading: CircleAvatar(
@@ -200,5 +255,15 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
         ),
       ),
     );
+  }
+
+  setUnreadMessageIncrease(BuildContext context, String receiverUserId) {
+    ref
+        .read(chatControllerProvider)
+        .setUnreadMessageIncrease(context, receiverUserId);
+  }
+  getReceiverIds() async{
+   await ref.read(chatControllerProvider).getReceiverIds(context);
+
   }
 }

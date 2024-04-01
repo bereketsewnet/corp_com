@@ -16,8 +16,6 @@ final userDataAuthProvider = FutureProvider((ref) {
   return authController.getUserData();
 });
 
-
-
 class AuthController {
   final AuthRepository authRepository;
   final ProviderRef ref;
