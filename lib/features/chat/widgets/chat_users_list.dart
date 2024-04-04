@@ -28,7 +28,7 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
   @override
   void initState() {
     super.initState();
-     getReceiverIds();
+    getReceiverIds();
   }
 
   @override
@@ -52,123 +52,81 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
                     var chatContactData = snapshot.data![index];
                     // String un = snapshot.data![index]['unread'];
 
-                    return StreamBuilder<List<Message>>(
-                      stream: ref
-                          .read(chatControllerProvider)
-                          .chatStream(chatContactData.contactId),
-                      builder: (context, snap) {
-                        if (snap.connectionState == ConnectionState.waiting) {
-                          return Container();
-                        }
-                        getReceiverIds();
-                        // for (int i = 0; i < snap.data!.length; i++) {
-                        //   final messageData = snap.data![i];
-                        //   if (!messageData.isSeen &&
-                        //       messageData.receiverId ==
-                        //           FirebaseAuth.instance.currentUser!.uid) {
-                        //     setUnreadMessageIncrease(
-                        //       context,
-                        //       chatContactData.contactId,
-                        //     );
-                        //     print(1);
-                        //   }
-                        // }
-
-                        // snap.data!.forEach((messageData) {
-                        //   if (!messageData.isSeen &&
-                        //       messageData.receiverId ==
-                        //           FirebaseAuth.instance.currentUser!.uid) {
-                        //     // setUnreadMessageIncrease(
-                        //     //   context,
-                        //     //   chatContactData.contactId,
-                        //     // );
-                        //     ChatRepository(
-                        //       firestore: FirebaseFirestore.instance,
-                        //       auth: FirebaseAuth.instance,
-                        //     ).setUnreadMessageIncrease(
-                        //       context,
-                        //       chatContactData.contactId,
-                        //     );
-                        //     print(1);
-                        //   }
-                        // });
-
-                        return Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  MobileChatScreen.routeName,
-                                  arguments: {
-                                    'name': chatContactData.name,
-                                    'uid': chatContactData.contactId,
-                                    'isGroupChat': false,
-                                    'profilePic': chatContactData.profilePic,
-                                  },
-                                );
+                    return Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              MobileChatScreen.routeName,
+                              arguments: {
+                                'name': chatContactData.name,
+                                'uid': chatContactData.contactId,
+                                'isGroupChat': false,
+                                'profilePic': chatContactData.profilePic,
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: ListTile(
-                                  title: Text(
-                                    chatContactData.name,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  subtitle: Padding(
-                                    padding: const EdgeInsets.only(top: 6.0),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.done_all_rounded,
-                                          color: Colors.lightBlueAccent,
-                                          size: 20,
-                                        ),
-                                        const SizedBox(width: 2),
-                                        Text(
-                                          chatContactData.lastMessage,
-                                          style: const TextStyle(fontSize: 15),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  leading: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      chatContactData.profilePic,
-                                    ),
-                                    radius: 30,
-                                  ),
-                                  trailing: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        DateFormat.Hm()
-                                            .format(chatContactData.timeSent),
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                      chatContactData.unread != 0 && chatContactData.unread != null
-                                          ? CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor: Colors.red,
-                                              child: Text(
-                                                chatContactData.unread.toString(),
-                                              ),
-                                            )
-                                          : const CircleAvatar(radius: 0),
-                                    ],
-                                  ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: ListTile(
+                              title: Text(
+                                chatContactData.name,
+                                style: const TextStyle(
+                                  fontSize: 18,
                                 ),
                               ),
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(top: 6.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.done_all_rounded,
+                                      color: Colors.lightBlueAccent,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      chatContactData.lastMessage,
+                                      style: const TextStyle(fontSize: 15),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  chatContactData.profilePic,
+                                ),
+                                radius: 30,
+                              ),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    DateFormat.Hm()
+                                        .format(chatContactData.timeSent),
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  chatContactData.unread! > 0 &&
+                                          chatContactData.unread != null
+                                      ? CircleAvatar(
+                                          radius: 10,
+                                          backgroundColor: Colors.red,
+                                          child: Text(
+                                            chatContactData.unread.toString(),
+                                          ),
+                                        )
+                                      : const CircleAvatar(radius: 0),
+                                ],
+                              ),
                             ),
-                            const Divider(color: dividerColor, indent: 85),
-                          ],
-                        );
-                      },
+                          ),
+                        ),
+                        const Divider(color: dividerColor, indent: 85),
+                      ],
                     );
                   },
                 );
@@ -257,13 +215,7 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
     );
   }
 
-  setUnreadMessageIncrease(BuildContext context, String receiverUserId) {
-    ref
-        .read(chatControllerProvider)
-        .setUnreadMessageIncrease(context, receiverUserId);
-  }
-  getReceiverIds() async{
-   await ref.read(chatControllerProvider).getReceiverIds(context);
-
+  getReceiverIds() async {
+    await ref.read(chatControllerProvider).getReceiverIds(context);
   }
 }

@@ -7,15 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../common/utils/utils.dart';
 import '../features/chat/widgets/my_message_card.dart';
 import '../models/message.dart';
 
 class ChatList extends ConsumerStatefulWidget {
-  const ChatList({
-    Key? key,
-    required this.receiverUserId,
-    required this.isGroupChat
-  }) : super(key: key);
+  const ChatList(
+      {Key? key, required this.receiverUserId, required this.isGroupChat})
+      : super(key: key);
 
   final String receiverUserId;
   final bool isGroupChat;
@@ -28,6 +27,12 @@ class _ChatListState extends ConsumerState<ChatList> {
   final messageScrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    decreaseUnreadMessage(widget.receiverUserId, 0);
+  }
+
+  @override
   void dispose() {
     super.dispose();
     messageScrollController.dispose();
@@ -36,8 +41,13 @@ class _ChatListState extends ConsumerState<ChatList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
-        stream: widget.isGroupChat ? ref.read(chatControllerProvider).groupChatStream(widget.receiverUserId) :
-            ref.read(chatControllerProvider).chatStream(widget.receiverUserId),
+        stream: widget.isGroupChat
+            ? ref
+                .read(chatControllerProvider)
+                .groupChatStream(widget.receiverUserId)
+            : ref
+                .read(chatControllerProvider)
+                .chatStream(widget.receiverUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loader();
@@ -103,5 +113,18 @@ class _ChatListState extends ConsumerState<ChatList> {
     ref.read(messageReplyProvider.state).update(
           (state) => MessageReply(message, isMe, messageEnum),
         );
+  }
+
+  decreaseUnreadMessage(String receiverUserId, int unreadCount) async {
+    final user = await getUserDataFromSharedPreferences();
+    String uid;
+    if (user != null) {
+      uid = user.uid;
+    } else {
+      uid = FirebaseAuth.instance.currentUser!.uid;
+    }
+    ref
+        .read(chatControllerProvider)
+        .setUnreadMessageIncrease(context, receiverUserId, uid, unreadCount);
   }
 }

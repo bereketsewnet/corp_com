@@ -53,7 +53,8 @@ class ChatController {
   //   return chatRepository.getAllUserUnreadMessage();
   // }
 
-  Future<int> getUnreadMessage(String receiverUserId, BuildContext context, String uid) {
+  Future<List<String>?> getUnreadMessage(
+      String receiverUserId, BuildContext context, String uid) {
     return chatRepository.getSpesficUnreadMessage(receiverUserId, context, uid);
   }
 
@@ -115,8 +116,15 @@ class ChatController {
   void setUnreadMessageIncrease(
     BuildContext context,
     String receiverUserId,
+    String uid,
+    int unreadCount,
   ) {
-    chatRepository.setUnreadMessageIncrease(context, receiverUserId);
+    chatRepository.setUnreadMessageIncrease(
+      context,
+      receiverUserId,
+      uid,
+      unreadCount,
+    );
   }
 
   getReceiverIds(BuildContext context) {

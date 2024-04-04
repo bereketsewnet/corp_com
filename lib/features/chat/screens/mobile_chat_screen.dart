@@ -1,9 +1,5 @@
-
-import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/common/widgets/loader.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
-import 'package:corp_com/features/call/controller/call_controller.dart';
-import 'package:corp_com/features/call/screens/call_pickup_screen.dart';
 import 'package:corp_com/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,90 +17,69 @@ class MobileChatScreen extends ConsumerWidget {
 
   const MobileChatScreen(
       {Key? key,
-        required this.name,
-        required this.uid,
-        required this.isGroupChat,
-        required this.profilePic})
+      required this.name,
+      required this.uid,
+      required this.isGroupChat,
+      required this.profilePic})
       : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return CallPickupScreen(
-      scaffold: Scaffold(
-        appBar: AppBar(
-          backgroundColor: appBarColor,
-          title: isGroupChat
-              ? Text(name)
-              : StreamBuilder<UserModel>(
-            stream: ref.read(authControllerProvider).userDataById(uid),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Loader();
-              }
-              return Column(
-                children: [
-                  Text(name),
-                  Text(
-                    snapshot.data!.isOnline ? 'Online' : 'Offline',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-          centerTitle: false,
-          actions: [
-            IconButton(
-              onPressed: () => showPlatfrom(ref, context),
-              icon: const Icon(Icons.video_call),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.call),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ChatList(
-                isGroupChat: isGroupChat,
-                receiverUserId: uid,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: appBarColor,
+        title: isGroupChat
+            ? Text(name)
+            : StreamBuilder<UserModel>(
+                stream: ref.read(authControllerProvider).userDataById(uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loader();
+                  }
+                  return Column(
+                    children: [
+                      Text(name),
+                      Text(
+                        snapshot.data!.isOnline ? 'Online' : 'Offline',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
-            ),
-            BottomChatField(
-              receiverUserId: uid,
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.video_call),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.call),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ChatList(
               isGroupChat: isGroupChat,
+              receiverUserId: uid,
             ),
-          ],
-        ),
+          ),
+          BottomChatField(
+            receiverUserId: uid,
+            isGroupChat: isGroupChat,
+          ),
+        ],
       ),
     );
-  }
-
-  void makeCall(WidgetRef ref, BuildContext context) {
-    ref.read(callControllerProvider).makeCall(
-      context,
-      name,
-      uid,
-      profilePic,
-      isGroupChat,
-    );
-  }
-
-  void showPlatfrom (WidgetRef ref, BuildContext context) async{
-    String platform = await ref.read(authControllerProvider).getPlatform();
-    if(platform == 'IOS'){
-      showSnackBar(context: context, content: 'IOS');
-    }else if(platform == 'Android'){
-      showSnackBar(context: context, content: 'Android');
-    }
   }
 }
