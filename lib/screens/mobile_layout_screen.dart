@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/auth/screens/choose_login_method.dart';
+import 'package:corp_com/features/group/screens/group_list_screen.dart';
 import 'package:corp_com/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:corp_com/features/status/screens/confirm_status_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../common/screens/display_all_users.dart';
 import '../common/utils/colors.dart';
+import '../features/chat/controller/chat_controller.dart';
 import '../features/chat/widgets/chat_users_list.dart';
 import '../features/group/screens/create_group_screen.dart';
 import '../features/status/screens/status_contacts_screen.dart';
@@ -27,6 +29,7 @@ class MobileLayoutScreen extends ConsumerStatefulWidget {
 class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late TabController tabBarController;
+  int totalUnreadCount = 0;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -49,6 +52,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
     super.initState();
     tabBarController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addObserver(this);
+    getallUnread();
   }
 
   @override
@@ -108,7 +112,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
                   onTap: () => Future(
                     () async {
                       ref.read(authControllerProvider).logOut();
-                     await clearUserDataFromSharedPreferences();
+                      await clearUserDataFromSharedPreferences();
                       Navigator.pushNamed(context, ChooseLoginMethod.routeName);
                     },
                   ),
@@ -126,15 +130,32 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
             labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
-            tabs: const [
+            tabs: [
               Tab(
-                text: 'CHATS',
+                child: Row(
+                  children: [
+                    const Text('Personal'),
+                    const SizedBox(width: 5),
+                    CircleAvatar(
+                      radius: 10,
+                      backgroundColor: tabColor,
+                      child: Consumer(
+                        builder: (context, watch, child) {
+                          final counter = ref.watch(counterProvider).counter;
+                          return Text(
+                            counter.toString(),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Tab(
+              const Tab(
                 text: 'GROUP',
               ),
-              Tab(
-                text: 'CHANEL',
+              const Tab(
+                text: 'STATUS',
               ),
             ],
           ),
@@ -143,14 +164,16 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           controller: tabBarController,
           children: const [
             ChattingUsersList(),
+            GroupListScreen(),
             StatusContactsScreen(),
-            Text('hi'),
           ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             if (tabBarController.index == 0) {
               Navigator.pushNamed(context, DisplayAllUsers.routeName);
+            } else if (tabBarController.index == 1) {
+              Navigator.pushNamed(context, CreateGroupScreen.routeName);
             } else {
               File? pickedImage = await pickImageFromGallery(context);
               if (pickedImage != null) {
@@ -170,5 +193,12 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
         ),
       ),
     );
+  }
+
+  getallUnread() async {
+    int temp = await retrieveTotalUnreadMessage();
+    setState(() {
+      totalUnreadCount = temp;
+    });
   }
 }

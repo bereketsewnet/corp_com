@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:corp_com/features/chat/controller/chat_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,16 +19,19 @@ final chatRepositoryProvider = Provider(
   (ref) => ChatRepository(
     firestore: FirebaseFirestore.instance,
     auth: FirebaseAuth.instance,
+    ref: ref,
   ),
 );
 
 class ChatRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
+  final ProviderRef ref;
 
   ChatRepository({
     required this.firestore,
     required this.auth,
+    required this.ref,
   });
 
   Stream<List<ChatContact>> getChatContacts() {
@@ -85,7 +89,7 @@ class ChatRepository {
     });
   }
 
-  getReceiverIds(BuildContext context) async {
+  getStartChattingUsersId(BuildContext context) async {
     final user = await getUserDataFromSharedPreferences();
     String uid;
     if (user != null) {
@@ -100,11 +104,18 @@ class ChatRepository {
         .doc(auth.currentUser!.uid)
         .collection('chats')
         .get();
-
+    int count = 0;
+    final counter = ref.read(counterProvider);
     snapshot.docs.forEach((doc) async {
       Map<String, dynamic> message = doc.data() as Map<String, dynamic>;
-      await getSpesficUnreadMessage(message['contactId'], context, uid);
+     final List<String>? temp = await getSpesficUnreadMessage(message['contactId'], context, uid);
+      count +=  temp!.length;
+    // ref.read(unreadCounterProvider.notifier).state = count;
+     counter.setCounter(count);
+
     });
+
+
   }
 
   Future<List<String>?> getSpesficUnreadMessage(

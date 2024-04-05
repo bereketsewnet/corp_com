@@ -9,6 +9,7 @@ import 'package:corp_com/models/message.dart';
 import 'package:corp_com/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/chat_contact.dart';
 
@@ -19,6 +20,8 @@ final chatControllerProvider = Provider.autoDispose((ref) {
     ref: ref,
   );
 });
+
+// final unreadCounterProvider = StateProvider<int>((ref) => 0);
 
 class ChatController {
   final ChatRepository chatRepository;
@@ -128,6 +131,32 @@ class ChatController {
   }
 
   getReceiverIds(BuildContext context) {
-    chatRepository.getReceiverIds(context);
+    chatRepository.getStartChattingUsersId(context);
+  }
+}
+
+final counterProvider = ChangeNotifierProvider((ref) => Counter());
+
+class Counter extends ChangeNotifier {
+  int _counter = 0;
+  int get counter => _counter;
+
+  Future<void> loadCounter() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _counter = prefs.getInt('totalUnread') ?? 0;
+    notifyListeners();
+  }
+
+  Future<void> setCounter(int value) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _counter = value;
+    await prefs.setInt('totalUnread', value);
+    notifyListeners();
+  }
+  Future<void> decreaseCounter() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _counter--;
+    await prefs.setInt('totalUnread', _counter);
+    notifyListeners();
   }
 }

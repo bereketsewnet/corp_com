@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../common/utils/utils.dart';
 import '../features/chat/widgets/my_message_card.dart';
 import '../models/message.dart';
@@ -73,6 +74,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                       widget.receiverUserId,
                       messageData.messageId,
                     );
+                decreaseValueSharedPrefs();
               }
               if (messageData.senderId ==
                   FirebaseAuth.instance.currentUser!.uid) {
@@ -126,5 +128,10 @@ class _ChatListState extends ConsumerState<ChatList> {
     ref
         .read(chatControllerProvider)
         .setUnreadMessageIncrease(context, receiverUserId, uid, unreadCount);
+  }
+
+  void decreaseValueSharedPrefs() async{
+    final counter = ref.read(counterProvider);
+    counter.decreaseCounter();
   }
 }
