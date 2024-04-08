@@ -4,9 +4,7 @@ import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/auth/screens/choose_login_method.dart';
 import 'package:corp_com/features/group/screens/group_list_screen.dart';
-import 'package:corp_com/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:corp_com/features/status/screens/confirm_status_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -133,20 +131,25 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
             tabs: [
               Tab(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text('Personal'),
                     const SizedBox(width: 5),
-                    CircleAvatar(
-                      radius: 10,
-                      backgroundColor: tabColor,
-                      child: Consumer(
-                        builder: (context, watch, child) {
-                          final counter = ref.watch(counterProvider).counter;
-                          return Text(
-                            counter.toString(),
-                          );
-                        },
-                      ),
+                    Consumer(
+                      builder: (context, watch, child) {
+                        final counter = ref.watch(counterProvider).counter;
+                        return Visibility(
+                          visible: counter > 0,
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: tabColor,
+                            child: Text(
+                              counter.toString(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
