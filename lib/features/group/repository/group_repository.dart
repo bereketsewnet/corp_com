@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:corp_com/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -23,6 +24,7 @@ class GroupRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
   final ProviderRef ref;
+
   GroupRepository({
     required this.firestore,
     required this.auth,
@@ -30,18 +32,15 @@ class GroupRepository {
   });
 
   void createGroup(BuildContext context, String name, File profilePic,
-      List<Contact> selectedContact) async {
+      List<UserModel> user) async {
     try {
       List<String> uids = [];
-      for (int i = 0; i < selectedContact.length; i++) {
+      for (int i = 0; i < user.length; i++) {
         var userCollection = await firestore
             .collection('users')
             .where(
-              'phoneNumber',
-              isEqualTo: selectedContact[i].phones[0].number.replaceAll(
-                    ' ',
-                    '',
-                  ),
+              'identifier',
+              isEqualTo: user[i].identifier,
             )
             .get();
 

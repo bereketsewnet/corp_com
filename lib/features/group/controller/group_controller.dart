@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:corp_com/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +25,7 @@ class GroupController {
   });
 
   void createGroup(BuildContext context, String name, File profilePic,
-      List<Contact> selectedContact) {
-    groupRepository.createGroup(context, name, profilePic, selectedContact);
+      List<UserModel> user) {
+    groupRepository.createGroup(context, name, profilePic, user);
   }
 }
