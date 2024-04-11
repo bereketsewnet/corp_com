@@ -13,7 +13,6 @@ import '../../../common/widgets/error.dart';
 import '../../../common/widgets/loader.dart';
 import '../../../models/user_model.dart';
 import '../../../screens/mobile_layout_screen.dart';
-import '../controller/auth_controller.dart';
 import '../screens/otp_screen.dart';
 import '../screens/user_information_screen.dart';
 

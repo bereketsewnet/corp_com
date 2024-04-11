@@ -23,7 +23,6 @@ class ChattingUsersList extends ConsumerStatefulWidget {
 }
 
 class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
-  int unreadMessagesCount = 0;
 
   @override
   void initState() {
@@ -49,7 +48,6 @@ class _ChattingUsersListState extends ConsumerState<ChattingUsersList> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   var chatContactData = snapshot.data![index];
-                  // String un = snapshot.data![index]['unread'];
 
                   return Column(
                     children: [

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/auth/screens/choose_login_method.dart';
+import 'package:corp_com/features/group/controller/group_controller.dart';
 import 'package:corp_com/features/group/screens/group_list_screen.dart';
 import 'package:corp_com/features/status/screens/confirm_status_screen.dart';
 import 'package:flutter/material.dart';
@@ -154,8 +155,30 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
                   ],
                 ),
               ),
-              const Tab(
-                text: 'GROUP',
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Group'),
+                    const SizedBox(width: 5),
+                    Consumer(
+                      builder: (context, watch, child) {
+                        final counter = ref.watch(groupCounterProvider).group_counter;
+                        return Visibility(
+                          visible: counter > 0,
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: tabColor,
+                            child: Text(
+                              counter.toString(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
               const Tab(
                 text: 'STATUS',

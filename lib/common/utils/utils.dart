@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:corp_com/common/permisson/permisson_android.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../models/chat_contact.dart';
 import '../../models/user_model.dart';
 
 void showSnackBar({required BuildContext context, required String content}) {

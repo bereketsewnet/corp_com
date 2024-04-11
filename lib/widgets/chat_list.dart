@@ -2,6 +2,7 @@ import 'package:corp_com/common/providers/message_reply_provider.dart';
 import 'package:corp_com/common/widgets/loader.dart';
 import 'package:corp_com/features/chat/controller/chat_controller.dart';
 import 'package:corp_com/features/chat/widgets/sender_message_card.dart';
+import 'package:corp_com/features/group/controller/group_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -76,6 +77,16 @@ class _ChatListState extends ConsumerState<ChatList> {
                     );
                 decreaseValueSharedPrefs();
               }
+
+              if (widget.isGroupChat && !messageData.isSeen) {
+                ref.read(groupControllerProvider).setGroupChatMessageSeen(
+                      context,
+                      widget.receiverUserId,
+                      messageData.messageId,
+                    );
+                decreaseGroupValueSharedPrefs();
+              }
+
               if (messageData.senderId ==
                   FirebaseAuth.instance.currentUser!.uid) {
                 return MyMessageCard(
@@ -130,8 +141,12 @@ class _ChatListState extends ConsumerState<ChatList> {
         .setUnreadMessageIncrease(context, receiverUserId, uid, unreadCount);
   }
 
-  void decreaseValueSharedPrefs() async{
+  void decreaseValueSharedPrefs() async {
     final counter = ref.read(counterProvider);
+    counter.decreaseCounter();
+  }
+  void decreaseGroupValueSharedPrefs() async {
+    final counter = ref.read(groupCounterProvider);
     counter.decreaseCounter();
   }
 }

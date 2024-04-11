@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/utils/colors.dart';
+
 class MyButton extends StatelessWidget {
   final Function()? onTap;
 
@@ -13,14 +15,14 @@ class MyButton extends StatelessWidget {
         padding: const EdgeInsets.all(25),
         margin: const EdgeInsets.symmetric(horizontal: 25),
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: greenColor,
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Center(
           child: Text(
             "Sign In",
             style: TextStyle(
-              color: Colors.white,
+              color: appBarColor,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),

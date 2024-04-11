@@ -48,25 +48,35 @@ class _SelectContactsGroupState extends ConsumerState<SelectContactsGroup> {
           itemBuilder: (context, index) {
             var user = snapshot.data![index];
 
-            return InkWell(
-              onTap: () => selectContact(index, user),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: ListTile(
-                  title: Text(
-                    user.name,
-                    style: const TextStyle(
-                      fontSize: 18,
+            return Column(
+              children: [
+                InkWell(
+                  onTap: () => selectContact(index, user),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          user.profilePic,
+                        ),
+                        radius: 30,
+                      ),
+                      title: Text(
+                        user.name,
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      trailing: selectedContactsIndex.contains(index) ? IconButton(
+                        onPressed: () {},
+                              icon: const Icon(Icons.done),
+                            )
+                          : null,
                     ),
                   ),
-                  leading: selectedContactsIndex.contains(index)
-                      ? IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.done),
-                        )
-                      : null,
                 ),
-              ),
+                const Divider(color: dividerColor, indent: 85),
+              ],
             );
           },
         );
@@ -74,37 +84,3 @@ class _SelectContactsGroupState extends ConsumerState<SelectContactsGroup> {
     );
   }
 }
-
-// return ref.watch(getContactsProvider).when(
-// data: (contactList) => Expanded(
-// child: ListView.builder(
-// itemCount: contactList.length,
-// itemBuilder: (context, index) {
-// final contact = contactList[index];
-// return InkWell(
-// onTap: () => selectContact(index, contact),
-// child: Padding(
-// padding: const EdgeInsets.only(bottom: 8),
-// child: ListTile(
-// title: Text(
-// contact.displayName,
-// style: const TextStyle(
-// fontSize: 18,
-// ),
-// ),
-// leading: selectedContactsIndex.contains(index)
-// ? IconButton(
-// onPressed: () {},
-// icon: const Icon(Icons.done),
-// )
-//     : null,
-// ),
-// ),
-// );
-// }),
-// ),
-// error: (err, trace) => ErrorScreen(
-// error: err.toString(),
-// ),
-// loading: () => const Loader(),
-// );

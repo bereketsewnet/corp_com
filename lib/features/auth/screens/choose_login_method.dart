@@ -1,3 +1,4 @@
+import 'package:corp_com/common/utils/colors.dart';
 import 'package:corp_com/common/utils/utils.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/auth/screens/login_with_phone_screen.dart';
@@ -54,40 +55,34 @@ class ChooseLoginMethod extends ConsumerWidget {
       }
     }
 
-    signInWithGoogle(BuildContext context) async{
+    signInWithGoogle(BuildContext context) async {
       ref.read(authControllerProvider).checkUserPlatFrom(context);
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 30),
-
-                // logo
-                const Icon(
-                  Icons.lock,
-                  size: 100,
-                ),
-
-                const SizedBox(height: 30),
+                const SizedBox(height: 100),
 
                 // welcome back, you've been missed!
-                Text(
-                  'Welcome back you\'ve been missed!',
+                const Text(
+                  'LogIn Here!',
                   style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 16,
+                    color: greenColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    inherit: true,
                   ),
                 ),
 
                 const SizedBox(height: 25),
 
-                // username textfield
+                // username text field
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
@@ -97,7 +92,7 @@ class ChooseLoginMethod extends ConsumerWidget {
 
                 const SizedBox(height: 10),
 
-                // password textfield
+                // password text field
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
@@ -107,14 +102,16 @@ class ChooseLoginMethod extends ConsumerWidget {
                 const SizedBox(height: 10),
 
                 // forgot password?
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+               const Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         'Forgot Password?',
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(
+                          color: greenColor,
+                        ),
                       ),
                     ],
                   ),
@@ -217,7 +214,7 @@ class ChooseLoginMethod extends ConsumerWidget {
                       child: const Text(
                         'Register now',
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: greenColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

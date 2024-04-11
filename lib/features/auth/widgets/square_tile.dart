@@ -1,3 +1,4 @@
+import 'package:corp_com/common/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class SquareTile extends StatelessWidget {
@@ -16,9 +17,9 @@ class SquareTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
+          border: Border.all(color: greenColor),
           borderRadius: BorderRadius.circular(16),
-          color: Colors.grey[200],
+          color: greenColor,
         ),
         child: Image.asset(
           imagePath,

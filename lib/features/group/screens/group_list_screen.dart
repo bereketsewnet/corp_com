@@ -1,3 +1,4 @@
+import 'package:corp_com/features/group/controller/group_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +17,12 @@ class GroupListScreen extends ConsumerStatefulWidget {
 }
 
 class _GroupListScreenState extends ConsumerState<GroupListScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    getGroupUserInUse();
+  }
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Group>>(
@@ -78,12 +85,26 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                         ),
                         radius: 30,
                       ),
-                      trailing: Text(
-                        DateFormat.Hm().format(groupData.timeSent),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 13,
-                        ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            DateFormat.Hm().format(groupData.timeSent),
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+                          groupData.unread! > 0 && groupData.unread != null
+                              ? CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: tabColor,
+                                  child: Text(
+                                    groupData.unread.toString(),
+                                  ),
+                                )
+                              : const CircleAvatar(radius: 0),
+                        ],
                       ),
                     ),
                   ),
@@ -95,5 +116,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
         );
       },
     );
+  }
+  getGroupUserInUse() async{
+   await ref.read(groupControllerProvider).getGroupUserInUse(context);
   }
 }

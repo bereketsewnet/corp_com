@@ -51,58 +51,60 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
         title: const Text('Create Group'),
       ),
       body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Stack(
-              children: [
-                image == null
-                    ? const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Stack(
+                children: [
+                  image == null
+                      ? const CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
+                    ),
+                    radius: 64,
+                  )
+                      : CircleAvatar(
+                    backgroundImage: FileImage(
+                      image!,
+                    ),
+                    radius: 64,
                   ),
-                  radius: 64,
-                )
-                    : CircleAvatar(
-                  backgroundImage: FileImage(
-                    image!,
-                  ),
-                  radius: 64,
-                ),
-                Positioned(
-                  bottom: -10,
-                  left: 80,
-                  child: IconButton(
-                    onPressed: selectImage,
-                    icon: const Icon(
-                      Icons.add_a_photo,
+                  Positioned(
+                    bottom: -10,
+                    left: 80,
+                    child: IconButton(
+                      onPressed: selectImage,
+                      icon: const Icon(
+                        Icons.add_a_photo,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextField(
-                controller: groupNameController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter Group Name',
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextField(
+                  controller: groupNameController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter Group Name',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              alignment: Alignment.topLeft,
-              padding: const EdgeInsets.all(8),
-              child: const Text(
-                'Select Contacts',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.all(8),
+                child: const Text(
+                  'Select Contacts',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            const SelectContactsGroup(),
-          ],
+              const SelectContactsGroup(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

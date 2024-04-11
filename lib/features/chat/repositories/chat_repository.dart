@@ -110,7 +110,6 @@ class ChatRepository {
       Map<String, dynamic> message = doc.data() as Map<String, dynamic>;
      final List<String>? temp = await getSpesficUnreadMessage(message['contactId'], context, uid);
       count +=  temp!.length;
-    // ref.read(unreadCounterProvider.notifier).state = count;
      counter.setCounter(count);
 
     });
@@ -140,35 +139,6 @@ class ChatRepository {
         context, receiverUserId, uid, unreadList.length);
     return unreadList;
   }
-
-  // Future<List<Map<String, dynamic>>> getAllUserUnreadMessage() async {
-  //   final user = await getUserDataFromSharedPreferences();
-  //   String uid;
-  //   if (user != null) {
-  //     uid = user.uid;
-  //   } else {
-  //     uid = auth.currentUser!.uid;
-  //   }
-  //   List<Map<String, dynamic>> unreadMessagesList = [];
-  //
-  //   QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
-  //       .instance
-  //       .collection('user')
-  //       .doc(uid)
-  //       .collection('chats')
-  //       .get();
-  //
-  //   for (var documentSnapshot in querySnapshot.docs) {
-  //     String receiverUserId = documentSnapshot.id;
-  //     final unreadMessages = await getSpesficUnreadMessage(receiverUserId, );
-  //     Map<String, dynamic> unread = {
-  //       receiverUserId: unreadMessages,
-  //     };
-  //     unreadMessagesList.add(Map<String, dynamic>.from(unread));
-  //   }
-  //
-  //   return unreadMessagesList;
-  // }
 
   Stream<List<Message>> getChatStream(String receiverUserId) {
     return firestore
@@ -436,52 +406,6 @@ class ChatRepository {
     }
   }
 
-  void sendGIFMessage({
-    required BuildContext context,
-    required String gifUrl,
-    required String receiverUserId,
-    required UserModel senderUser,
-    required MessageReply? messageReply,
-    required bool isGroupChat,
-  }) async {
-    try {
-      var timeSent = DateTime.now();
-      UserModel? receiverUserData;
-
-      if (!isGroupChat) {
-        var userDataMap =
-            await firestore.collection('users').doc(receiverUserId).get();
-        receiverUserData = UserModel.fromMap(userDataMap.data()!);
-      }
-
-      var messageId = const Uuid().v1();
-
-      _saveDataToContactsSubcollection(
-        senderUser,
-        receiverUserData,
-        'GIF',
-        timeSent,
-        receiverUserId,
-        isGroupChat,
-      );
-
-      _saveMessageToMessageSubcollection(
-        receiverUserId: receiverUserId,
-        text: gifUrl,
-        timeSent: timeSent,
-        messageType: MessageEnum.gif,
-        messageId: messageId,
-        username: senderUser.name,
-        messageReply: messageReply,
-        receiverUserName: receiverUserData?.name,
-        senderUsername: senderUser.name,
-        isGroupChat: isGroupChat,
-      );
-    } catch (e) {
-      showSnackBar(context: context, content: e.toString());
-    }
-  }
-
   void setChatMessageSeen(
     BuildContext context,
     String receiverUserId,
@@ -532,11 +456,7 @@ class ChatRepository {
         docRef.update({
           'unread': unreadCount,
         });
-      } //else {
-      //   docRef.update({
-      //     'unread': 1,
-      //   });
-      // }
+      }
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
