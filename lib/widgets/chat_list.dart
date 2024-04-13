@@ -45,11 +45,11 @@ class _ChatListState extends ConsumerState<ChatList> {
     return StreamBuilder<List<Message>>(
         stream: widget.isGroupChat
             ? ref
-                .read(chatControllerProvider)
-                .groupChatStream(widget.receiverUserId)
+            .read(chatControllerProvider)
+            .groupChatStream(widget.receiverUserId)
             : ref
-                .read(chatControllerProvider)
-                .chatStream(widget.receiverUserId),
+            .read(chatControllerProvider)
+            .chatStream(widget.receiverUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loader();
@@ -71,19 +71,22 @@ class _ChatListState extends ConsumerState<ChatList> {
                   messageData.receiverId ==
                       FirebaseAuth.instance.currentUser!.uid) {
                 ref.read(chatControllerProvider).setChatMessageSeen(
-                      context,
-                      widget.receiverUserId,
-                      messageData.messageId,
-                    );
+                  context,
+                  widget.receiverUserId,
+                  messageData.messageId,
+                );
                 decreaseValueSharedPrefs();
               }
 
-              if (widget.isGroupChat && !messageData.isSeen) {
+              if (widget.isGroupChat &&
+                  !messageData.isSeen &&
+                  messageData.senderId !=
+                      FirebaseAuth.instance.currentUser!.uid) {
                 ref.read(groupControllerProvider).setGroupChatMessageSeen(
-                      context,
-                      widget.receiverUserId,
-                      messageData.messageId,
-                    );
+                  context,
+                  widget.receiverUserId,
+                  messageData.messageId,
+                );
                 decreaseGroupValueSharedPrefs();
               }
 
@@ -97,22 +100,24 @@ class _ChatListState extends ConsumerState<ChatList> {
                   repliedText: messageData.repliedMessage,
                   username: messageData.repliedTo,
                   isSeen: messageData.isSeen,
-                  onLeftSwipe: () => onMessageSwipe(
-                    messageData.text,
-                    true,
-                    messageData.type,
-                  ),
+                  onLeftSwipe: () =>
+                      onMessageSwipe(
+                        messageData.text,
+                        true,
+                        messageData.type,
+                      ),
                 );
               }
               return SenderMessageCard(
                 message: messageData.text,
                 date: timeSent,
                 type: messageData.type,
-                onRightSwipe: () => onMessageSwipe(
-                  messageData.text,
-                  false,
-                  messageData.type,
-                ),
+                onRightSwipe: () =>
+                    onMessageSwipe(
+                      messageData.text,
+                      false,
+                      messageData.type,
+                    ),
                 repliedText: messageData.repliedMessage,
                 username: messageData.repliedTo,
                 repliedMessageType: messageData.repliedMessageType,
@@ -125,7 +130,7 @@ class _ChatListState extends ConsumerState<ChatList> {
   void onMessageSwipe(String message, bool isMe, messageEnum) {
     ref.read(messageReplyProvider.state).update(
           (state) => MessageReply(message, isMe, messageEnum),
-        );
+    );
   }
 
   decreaseUnreadMessage(String receiverUserId, int unreadCount) async {
@@ -145,6 +150,7 @@ class _ChatListState extends ConsumerState<ChatList> {
     final counter = ref.read(counterProvider);
     counter.decreaseCounter();
   }
+
   void decreaseGroupValueSharedPrefs() async {
     final counter = ref.read(groupCounterProvider);
     counter.decreaseCounter();

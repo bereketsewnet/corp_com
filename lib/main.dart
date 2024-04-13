@@ -1,3 +1,4 @@
+import 'package:corp_com/code_test.dart';
 import 'package:corp_com/features/auth/controller/auth_controller.dart';
 import 'package:corp_com/features/auth/repository/auth_repository.dart';
 import 'package:corp_com/features/auth/screens/choose_login_method.dart';
@@ -39,20 +40,21 @@ class MyApp extends ConsumerWidget {
             color: appBarColor,
           )),
       onGenerateRoute: (settigs) => generateRoute(settigs),
-      home: ref.watch(userDataAuthProvider).when(
-        data: (user) {
-          if (user == null) {
-            return const ChooseLoginMethod();
-          }
-          return const MobileLayoutScreen();
-        },
-        error: (err, trace) {
-          return ErrorScreen(
-            error: err.toString(),
-          );
-        },
-        loading: () => const Loader(),
-      ),
+      // home: ref.watch(userDataAuthProvider).when(
+      //   data: (user) {
+      //     if (user == null) {
+      //       return const ChooseLoginMethod();
+      //     }
+      //     return const MobileLayoutScreen();
+      //   },
+      //   error: (err, trace) {
+      //     return ErrorScreen(
+      //       error: err.toString(),
+      //     );
+      //   },
+      //   loading: () => const Loader(),
+      // ),
+        home: const CodeTest(),
     );
   }
 }

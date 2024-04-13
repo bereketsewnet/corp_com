@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../common/userInfo/controller/local_user_data_controller.dart';
 import '../../../models/chat_contact.dart';
 
 final chatControllerProvider = Provider.autoDispose((ref) {
@@ -54,7 +55,7 @@ class ChatController {
 
   Future<List<String>?> getUnreadMessage(
       String receiverUserId, BuildContext context, String uid) {
-    return chatRepository.getSpesficUnreadMessage(receiverUserId, context, uid);
+    return chatRepository.getSpecificUnreadMessage(receiverUserId, context, uid);
   }
 
   void sendTextMessage(

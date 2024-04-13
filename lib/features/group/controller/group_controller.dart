@@ -28,7 +28,7 @@ class GroupController {
 
   void createGroup(BuildContext context, String name, File profilePic,
       List<UserModel> user) {
-    groupRepository.createGroup(context, name, profilePic, user);
+    return ref.read(groupRepositoryProvider).createGroup(context, name, profilePic, user);
   }
 
    getGroupUserInUse(BuildContext context) {

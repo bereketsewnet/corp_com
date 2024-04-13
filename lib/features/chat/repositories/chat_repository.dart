@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:corp_com/common/userInfo/controller/local_user_data_controller.dart';
 import 'package:corp_com/features/chat/controller/chat_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -50,16 +51,19 @@ class ChatRepository {
             .get();
         var user = UserModel.fromMap(userData.data()!);
 
-        contacts.add(
-          ChatContact(
-            name: user.name,
-            profilePic: user.profilePic,
-            contactId: chatContact.contactId,
-            timeSent: chatContact.timeSent,
-            lastMessage: chatContact.lastMessage,
-            unread: chatContact.unread,
-          ),
+        var contact = ChatContact(
+          name: user.name,
+          profilePic: user.profilePic,
+          contactId: chatContact.contactId,
+          timeSent: chatContact.timeSent,
+          lastMessage: chatContact.lastMessage,
+          unread: chatContact.unread,
         );
+
+         contacts.add(contact);
+        await ref
+            .read(localUserDataControllerProvider)
+            .saveStartChattingUserList(contact);
       }
       return contacts;
     });
@@ -108,16 +112,14 @@ class ChatRepository {
     final counter = ref.read(counterProvider);
     snapshot.docs.forEach((doc) async {
       Map<String, dynamic> message = doc.data() as Map<String, dynamic>;
-     final List<String>? temp = await getSpesficUnreadMessage(message['contactId'], context, uid);
-      count +=  temp!.length;
-     counter.setCounter(count);
-
+      final List<String>? temp =
+          await getSpecificUnreadMessage(message['contactId'], context, uid);
+      count += temp!.length;
+      counter.setCounter(count);
     });
-
-
   }
 
-  Future<List<String>?> getSpesficUnreadMessage(
+  Future<List<String>?> getSpecificUnreadMessage(
       String receiverUserId, BuildContext context, String uid) async {
     final querySnapshot = await firestore
         .collection('users')
@@ -136,7 +138,11 @@ class ChatRepository {
       }
     }
     await setUnreadMessageIncrease(
-        context, receiverUserId, uid, unreadList.length);
+      context,
+      receiverUserId,
+      uid,
+      unreadList.length,
+    );
     return unreadList;
   }
 
